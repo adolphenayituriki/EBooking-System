@@ -56,7 +56,7 @@ export default function Rooms() {
       </section>
 
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 mb-10 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex items-center gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
           <FaFilter className="text-gray-400 shrink-0" />
           {types.map((t) => (
             <button
@@ -75,11 +75,11 @@ export default function Rooms() {
         </div>
 
         {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="card animate-pulse">
-                <div className="h-56 bg-gray-200" />
-                <div className="p-6 space-y-3">
+                <div className="h-48 bg-gray-200" />
+                <div className="p-4 space-y-3">
                   <div className="h-5 bg-gray-200 rounded w-1/2" />
                   <div className="h-4 bg-gray-100 rounded w-3/4" />
                   <div className="h-4 bg-gray-100 rounded w-2/3" />
@@ -90,10 +90,10 @@ export default function Rooms() {
         )}
 
         {!loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((room, i) => (
               <div key={room._id} className="card group flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
-                <div className="h-56 bg-gray-200 relative overflow-hidden">
+                <div className="h-48 bg-gray-200 relative overflow-hidden">
                   <img
                     src={roomImages[room.type] || roomImages.Single}
                     alt={room.name}
@@ -101,11 +101,11 @@ export default function Rooms() {
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                  <div className="absolute top-4 left-4">
+                  <div className="absolute top-3 left-3">
                     <span className="badge bg-gray-100 text-gray-700">{room.type}</span>
                   </div>
                   {room.type === 'Presidential' && (
-                    <div className="absolute top-4 right-4">
+                    <div className="absolute top-3 right-3">
                       <span className="badge bg-gray-800 text-white">
                         <FaStar className="text-white text-[10px]" /> Premium
                       </span>
@@ -113,11 +113,11 @@ export default function Rooms() {
                   )}
                 </div>
 
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className="font-display text-xl font-bold text-gray-900 mb-1">{room.name}</h3>
-                  <p className="text-gray-500 text-sm mb-4 leading-relaxed flex-1">{room.description}</p>
+                <div className="p-4 flex flex-col flex-1">
+                  <h3 className="font-display text-lg font-bold text-gray-900 mb-1">{room.name}</h3>
+                  <p className="text-gray-500 text-sm mb-3 leading-relaxed flex-1">{room.description}</p>
 
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
                     <span className="flex items-center gap-1.5">
                       <FaUsers className="text-gray-500" /> {room.capacity} {room.capacity === 1 ? 'Guest' : 'Guests'}
                     </span>
@@ -129,7 +129,7 @@ export default function Rooms() {
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap gap-1.5 mb-5">
+                  <div className="flex flex-wrap gap-1.5 mb-3">
                     {room.amenities?.slice(0, 4).map((a) => (
                       <span key={a} className="badge bg-gray-100 text-gray-700 border border-gray-200">
                         <FaCheckCircle className="text-gray-500 text-[10px]" /> {a}
@@ -140,12 +140,12 @@ export default function Rooms() {
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-auto">
                     <div>
-                      <span className="text-2xl font-display font-bold text-gray-900">{formatPrice(room.price)}</span>
+                      <span className="text-xl font-display font-bold text-gray-900">{formatPrice(room.price)}</span>
                       <span className="text-gray-400 text-sm"> / night</span>
                     </div>
-                    <button onClick={() => setSelected(room)} className="btn-primary text-sm py-2.5 px-5">
+                    <button onClick={() => setSelected(room)} className="btn-primary text-sm py-2 px-4">
                       Book Now
                     </button>
                   </div>
