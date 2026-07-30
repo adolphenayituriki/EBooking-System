@@ -67,7 +67,7 @@
     @apply fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4;
   }
   .page-hero {
-    @apply relative py-16 md:py-20 bg-black overflow-hidden;
+    @apply relative py-12 md:py-16 bg-black overflow-hidden;
   }
   .page-hero::before {
     @apply absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.03),transparent_50%)];

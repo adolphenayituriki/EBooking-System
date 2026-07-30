@@ -45,18 +45,18 @@ export default function Rooms() {
           <div className="absolute inset-0 bg-black/70" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-gray-300 font-semibold text-sm uppercase tracking-widest">Accommodation</span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mt-3 mb-4 animate-in">
+          <span className="text-gray-300 font-semibold text-xs uppercase tracking-widest">Accommodation</span>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white mt-2 mb-2 animate-in">
             Our <span className="text-gray-300">Rooms</span>
           </h1>
-          <p className="text-gray-400 max-w-xl mx-auto text-lg">
+          <p className="text-gray-400 max-w-xl mx-auto text-sm">
             Discover our range of luxurious rooms and suites in the heart of Kigali, each designed for your ultimate comfort
           </p>
         </div>
       </section>
 
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+      <section className="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 mb-4 overflow-x-auto pb-2 scrollbar-hide">
           <FaFilter className="text-gray-400 shrink-0" />
           {types.map((t) => (
             <button
@@ -156,12 +156,12 @@ export default function Rooms() {
         )}
 
         {!loading && filtered.length === 0 && (
-          <div className="text-center py-20">
-            <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <FaBed className="text-2xl text-gray-400" />
+          <div className="text-center py-10">
+            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <FaBed className="text-xl text-gray-400" />
             </div>
-            <h3 className="font-display text-xl font-bold text-gray-600 mb-2">No rooms found</h3>
-            <p className="text-gray-400">Try selecting a different category</p>
+            <h3 className="font-display text-lg font-bold text-gray-600 mb-1">No rooms found</h3>
+            <p className="text-gray-400 text-sm">Try selecting a different category</p>
           </div>
         )}
       </section>
