@@ -255,7 +255,7 @@ export default function Home() {
       </section>
 
       {/* Stats */}
-      <section className="py-16 bg-black">
+      <section className="py-10 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <span className="text-gray-600 text-xs font-medium uppercase tracking-[0.2em]">Our Numbers</span>
@@ -277,19 +277,19 @@ export default function Home() {
       </section>
 
       {/* Rooms / Services / Halls summary */}
-      <section className="py-16 bg-black">
+      <section className="py-10 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-5">
             {summaries.map(({ to, icon: Icon, title, desc, items }) => (
               <Link
                 key={title}
                 to={to}
-                className="group bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:bg-gray-800 transition-all duration-300"
+                className="group bg-gray-900 border border-gray-800 rounded-2xl p-5 hover:bg-gray-800 transition-all duration-300"
               >
-                <Icon className="text-2xl text-gray-400 mb-4 group-hover:text-white transition-colors duration-300" />
-                <h3 className="text-xl font-display font-bold text-white mb-2">{title}</h3>
-                <p className="text-gray-400 text-sm mb-4 leading-relaxed">{desc}</p>
-                <ul className="space-y-2 mb-6">
+                <Icon className="text-xl text-gray-400 mb-3 group-hover:text-white transition-colors duration-300" />
+                <h3 className="text-lg font-display font-bold text-white mb-1.5">{title}</h3>
+                <p className="text-gray-400 text-sm mb-3 leading-relaxed">{desc}</p>
+                <ul className="space-y-1.5 mb-4">
                   {items.map((item) => (
                     <li key={item} className="flex items-center gap-3 text-sm text-gray-400">
                       <span className="w-1.5 h-1.5 rounded-full bg-gray-600 flex-shrink-0" />
@@ -307,7 +307,7 @@ export default function Home() {
       </section>
 
       {/* Rooms */}
-      <section ref={roomsRef} className="py-16 overflow-hidden bg-black">
+      <section ref={roomsRef} className="py-10 overflow-hidden bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
           <div className="flex items-end justify-between">
             <div>
@@ -383,7 +383,7 @@ export default function Home() {
       </section>
 
       {/* Gallery */}
-      <section className="py-16 bg-black">
+      <section className="py-10 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-display font-bold text-white">Gallery</h2>
@@ -416,7 +416,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-black overflow-hidden">
+      <section className="py-10 bg-black overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
           <div className="flex items-end justify-between">
             <div>
@@ -455,32 +455,32 @@ export default function Home() {
       </section>
 
       {/* CTA + Newsletter */}
-      <section className="py-16 bg-black relative overflow-hidden">
+      <section className="py-10 bg-black relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1549638441-b787d2e11f14?w=1600&q=80')] bg-cover bg-center opacity-5" />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-5 gap-10 items-center">
+          <div className="grid md:grid-cols-5 gap-8 items-center">
             <div className="md:col-span-3">
-              <h2 className="text-2xl md:text-3xl font-display font-bold text-white mt-2 mb-3 leading-tight">
+              <h2 className="text-xl md:text-2xl font-display font-bold text-white mt-2 mb-2 leading-tight">
                 Book Your Stay at Akarabo Hotel
               </h2>
-              <p className="text-gray-400 text-sm mb-6 max-w-md">Book now and enjoy exclusive rates.</p>
+              <p className="text-gray-400 text-sm mb-4 max-w-md">Book now and enjoy exclusive rates.</p>
               <div className="flex flex-wrap gap-3">
-                <Link to="/rooms" className="inline-flex items-center gap-2 bg-white text-black font-semibold px-6 py-2.5 rounded-xl transition-all hover:bg-gray-200 hover:-translate-y-0.5 text-sm shadow-lg">
+                <Link to="/rooms" className="inline-flex items-center gap-2 bg-white text-black font-semibold px-5 py-2.5 rounded-xl transition-all hover:bg-gray-200 hover:-translate-y-0.5 text-sm shadow-lg">
                   Book Your Stay <FaArrowRight className="text-[10px]" />
                 </Link>
-                <Link to="/contact" className="inline-flex items-center gap-2 border-2 border-gray-700 text-white hover:bg-gray-800 font-semibold px-6 py-2.5 rounded-xl transition-all text-sm">
+                <Link to="/contact" className="inline-flex items-center gap-2 border-2 border-gray-700 text-white hover:bg-gray-800 font-semibold px-5 py-2.5 rounded-xl transition-all text-sm">
                   Contact Us
                 </Link>
               </div>
             </div>
 
             {/* Newsletter */}
-            <div className="md:col-span-2 bg-gray-900 rounded-2xl border border-gray-800 p-6">
+            <div className="md:col-span-2 bg-gray-900 rounded-2xl border border-gray-800 p-5">
               <h3 className="text-white font-display font-semibold text-sm mb-1">Stay Updated</h3>
-              <p className="text-gray-400 text-xs mb-4">Get exclusive offers straight to your inbox.</p>
+              <p className="text-gray-400 text-xs mb-3">Get exclusive offers straight to your inbox.</p>
               <div className="flex gap-2">
-                <input type="email" placeholder="your@email.com" className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-3.5 py-2.5 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-600" />
-                <button className="bg-white text-black hover:bg-gray-200 font-semibold px-4 py-2.5 rounded-xl transition-all text-sm whitespace-nowrap">Subscribe</button>
+                <input type="email" placeholder="your@email.com" className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-600" />
+                <button className="bg-white text-black hover:bg-gray-200 font-semibold px-3.5 py-2.5 rounded-xl transition-all text-sm whitespace-nowrap">Subscribe</button>
               </div>
               <p className="text-gray-600 text-[10px] mt-2">No spam. Unsubscribe anytime.</p>
             </div>
