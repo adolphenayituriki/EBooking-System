@@ -80,9 +80,9 @@ export default function Services() {
               key={value}
               onClick={() => setFilter(value)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                filter === value
-                  ? 'bg-gray-900 text-white shadow-md'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  filter === value
+                    ? 'bg-gray-900 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:-translate-y-0.5'
               }`}
             >
               <Icon className="text-xs" /> {label}
@@ -145,10 +145,10 @@ export default function Services() {
                       </div>
                       <button
                         onClick={() => setSelected(svc)}
-                        className="flex items-center gap-1.5 bg-gray-900 hover:bg-black text-white font-semibold text-sm py-2 px-4 rounded-xl transition-all"
+                        className="btn-primary text-sm py-2 px-4"
                       >
                         Book Now
-                        <FaArrowRight className="text-xs group-hover:translate-x-0.5 transition-transform" />
+                        <FaArrowRight className="text-xs" />
                       </button>
                     </div>
                   </div>

@@ -188,7 +188,7 @@ export default function Home() {
                 <Link to="/rooms" className="inline-flex items-center gap-2 bg-white text-black font-semibold px-7 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-sm whitespace-nowrap">
                   Book Your Stay <FaArrowRight className="text-[10px]" />
                 </Link>
-                <Link to="/contact" className="inline-flex items-center gap-2 border-2 border-gray-600 text-white hover:bg-gray-800 font-semibold px-7 py-3 rounded-xl transition-all text-sm">
+                <Link to="/contact" className="inline-flex items-center gap-2 border-2 border-gray-600 text-white hover:bg-gray-800 font-semibold px-7 py-3 rounded-xl transition-all text-sm hover:-translate-y-0.5">
                   Contact
                 </Link>
               </div>
@@ -354,8 +354,8 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="text-center mt-8">
-          <Link to="/rooms" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-300 hover:text-white transition-colors group">
+        <div className="text-center mt-6">
+          <Link to="/rooms" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-300 hover:text-white transition-colors hover:-translate-y-0.5 inline-block group">
             View All Rooms <FaArrowRight className="text-[10px] group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -393,7 +393,7 @@ export default function Home() {
               <button
                 key={cat}
                 onClick={() => setGalleryFilter(cat)}
-                className={`text-xs font-semibold px-4 py-1.5 rounded-lg transition-all ${galleryFilter === cat ? 'bg-white text-black' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'}`}
+                className={`text-xs font-semibold px-4 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 ${galleryFilter === cat ? 'bg-white text-black' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'}`}
               >
                 {cat}
               </button>
@@ -407,8 +407,8 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="text-center mt-8">
-            <Link to="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-300 hover:text-white transition-colors group">
+          <div className="text-center mt-6">
+            <Link to="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-300 hover:text-white transition-colors hover:-translate-y-0.5 inline-block group">
               <FaImages className="text-xs" /> View Full Gallery <FaArrowRight className="text-[10px] group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
