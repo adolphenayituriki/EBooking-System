@@ -14,24 +14,24 @@ const contactInfo = [
 ];
 
 function FormField({ label, field, type = 'text', icon: Icon, error, ...props }) {
-  const inputClasses = `w-full pl-9 pr-4 py-3 bg-white border rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 outline-none transition-all duration-200 resize-none ${error ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-300'}`;
+  const inputClasses = `w-full pl-8 pr-3 py-2.5 bg-white border rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 outline-none transition-all duration-200 resize-none ${error ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-300'}`;
 
   return (
     <div>
-      <label className="text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
+      <label className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-1.5">
         {Icon && <Icon className="text-gray-500 text-xs" />}
         {label}
       </label>
       <div className="relative">
-        {Icon && <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />}
+        {Icon && <Icon className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-[10px]" />}
         {type === 'textarea' ? (
-          <textarea className={inputClasses} rows={4} value={props.value} onChange={props.onChange} placeholder={props.placeholder} />
+          <textarea className={inputClasses} rows={3} value={props.value} onChange={props.onChange} placeholder={props.placeholder} />
         ) : (
           <input type={type} className={inputClasses} value={props.value} onChange={props.onChange} placeholder={props.placeholder} />
         )}
       </div>
       {error && (
-        <p className="flex items-center gap-1 text-red-500 text-xs mt-1.5 font-medium">
+        <p className="flex items-center gap-1 text-red-500 text-xs mt-1 font-medium">
           <FaExclamationTriangle className="text-[10px]" />
           {error}
         </p>
@@ -121,10 +121,10 @@ export default function Contact() {
       </section>
 
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 -mt-24 relative z-10 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 -mt-12 relative z-10 mb-10">
           {contactInfo.map(({ icon: Icon, label, value, sub }, i) => (
-            <div key={label} className="card p-6 text-center group hover:-translate-y-1 animate-in-delay-1" style={{ animationDelay: `${i * 0.1}s` }}>
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-gray-200 transition-colors">
+            <div key={label} className="card p-4 text-center group hover:-translate-y-1 animate-in-delay-1" style={{ animationDelay: `${i * 0.1}s` }}>
+              <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-gray-200 transition-colors">
                 <Icon className="text-gray-700 group-hover:text-gray-900 transition-colors" />
               </div>
               <h3 className="font-display font-semibold text-gray-900 text-sm mb-1">{label}</h3>
@@ -134,16 +134,16 @@ export default function Contact() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           <div className="lg:col-span-3">
-            <div className="card p-8 md:p-10">
-              <div className="mb-8">
-                <h2 className="font-display text-2xl font-bold text-gray-900 mb-2">Send Us a Message</h2>
+            <div className="card p-5 md:p-6">
+              <div className="mb-4">
+                <h2 className="font-display text-xl font-bold text-gray-900 mb-1">Send Us a Message</h2>
                 <p className="text-gray-500 text-sm">Fill out the form below and our team will get back to you shortly.</p>
               </div>
 
               {sent && (
-                <div className="bg-gray-100 border border-gray-200 rounded-xl p-4 mb-6 flex items-start gap-3 animate-slide-down">
+                <div className="bg-gray-100 border border-gray-200 rounded-xl p-4 mb-4 flex items-start gap-3 animate-slide-down">
                   <FaCheckCircle className="text-gray-700 mt-0.5 shrink-0" />
                   <div>
                     <p className="font-semibold text-gray-900 text-sm">Message Sent!</p>
@@ -152,12 +152,12 @@ export default function Contact() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField label="Full Name" field="name" icon={FaUser} value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="e.g. Jean Hakizimana" error={errors.name} />
                   <FormField label="Email Address" field="email" type="email" icon={FaEnvelope} value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@email.com" error={errors.email} />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField label="Phone Number" field="phone" icon={FaPhone} value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+250 788 000 000" error={errors.phone} />
                   <FormField label="Subject" field="subject" icon={FaTag} value={form.subject} onChange={(e) => set('subject', e.target.value)} placeholder="e.g. Room Reservation" error={errors.subject} />
                 </div>
@@ -175,13 +175,13 @@ export default function Contact() {
           </div>
 
           <div className="lg:col-span-2">
-            <div className="card overflow-hidden h-full min-h-[400px]">
+            <div className="card overflow-hidden h-full min-h-[300px]">
               <iframe
                 title="Akarabo Hotel Location"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.5!2d29.87!3d-1.94!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwNTYnMjQuMCJTIDI5wrA1MicxMi4wRQ!5e0!3m2!1sen!2srw!4v1"
                 width="100%"
                 height="100%"
-                style={{ border: 0, minHeight: '400px' }}
+                style={{ border: 0, minHeight: '300px' }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
