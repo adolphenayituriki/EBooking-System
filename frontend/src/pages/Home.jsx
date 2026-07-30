@@ -233,7 +233,7 @@ export default function Home() {
                       </select>
                     </div>
                   </div>
-                  <button onClick={handleSearch} className="block w-full bg-black text-white text-center font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 text-sm">
+                  <button onClick={handleSearch} className="block w-full bg-white text-black text-center font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 text-sm">
                     Search Rooms
                   </button>
                 </div>
@@ -327,7 +327,7 @@ export default function Home() {
         <div ref={scrollRef} className="flex gap-5 overflow-x-auto px-4 sm:px-6 lg:px-8 pb-2 scroll-smooth scrollbar-hide">
           {rooms.map((room, i) => (
             <div key={room._id} className="min-w-[270px] sm:min-w-[310px] bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shrink-0 hover:bg-gray-800 transition-all duration-300 group">
-              <button onClick={() => setSelectedRoom(room)} className="w-full h-44 bg-slate-800 relative overflow-hidden cursor-pointer text-left">
+              <button onClick={() => setSelectedRoom(room)} className="w-full h-44 bg-gray-800 relative overflow-hidden cursor-pointer text-left">
                 <img src={roomImages[i % roomImages.length]} alt={room.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 <span className="absolute top-3 left-3 bg-gray-800 text-gray-200 text-[10px] font-semibold px-2 py-0.5 rounded-md">{room.type}</span>

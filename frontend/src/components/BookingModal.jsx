@@ -127,7 +127,7 @@ export default function BookingModal({ item, type, onClose }) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header with item info */}
-        <div className="bg-gradient-to-r from-gray-900 to-black px-6 pt-5 pb-4 text-white relative">
+        <div className="bg-black px-6 pt-5 pb-4 text-white relative">
           <button onClick={onClose} className="absolute top-3 right-3 w-7 h-7 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-colors">
             <FaTimes className="text-[11px]" />
           </button>
@@ -193,7 +193,7 @@ export default function BookingModal({ item, type, onClose }) {
                 <div className="relative">
                   <FaUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
                   <input
-                    className={`w-full pl-9 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.guestName ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
+                    className={`w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.guestName ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
                     value={form.guestName}
                     onChange={(e) => set('guestName', e.target.value)}
                     placeholder="e.g. Jean Hakizimana"
@@ -206,7 +206,7 @@ export default function BookingModal({ item, type, onClose }) {
                     <FaEnvelope className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
                     <input
                       type="email"
-                      className={`w-full pl-9 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.email ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
+                      className={`w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.email ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
                       value={form.email}
                       onChange={(e) => set('email', e.target.value)}
                       placeholder="you@email.com"
@@ -217,7 +217,7 @@ export default function BookingModal({ item, type, onClose }) {
                   <div className="relative">
                     <FaPhone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
                     <input
-                      className={`w-full pl-9 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.phone ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
+                      className={`w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.phone ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
                       value={form.phone}
                       onChange={(e) => set('phone', e.target.value)}
                       placeholder="+250 788 000 000"
@@ -242,7 +242,7 @@ export default function BookingModal({ item, type, onClose }) {
                       <FaCalendarAlt className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
                       <input
                         type="date"
-                        className={`w-full pl-9 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.checkIn ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
+                        className={`w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.checkIn ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
                         value={form.checkIn}
                         onChange={(e) => set('checkIn', e.target.value)}
                         min={new Date().toISOString().split('T')[0]}
@@ -254,7 +254,7 @@ export default function BookingModal({ item, type, onClose }) {
                       <FaCalendarAlt className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
                       <input
                         type="date"
-                        className={`w-full pl-9 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.checkOut ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
+                        className={`w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.checkOut ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
                         value={form.checkOut}
                         onChange={(e) => set('checkOut', e.target.value)}
                         min={form.checkIn || new Date().toISOString().split('T')[0]}
@@ -269,7 +269,7 @@ export default function BookingModal({ item, type, onClose }) {
                       <FaCalendarAlt className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
                       <input
                         type="date"
-                        className={`w-full pl-9 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.date ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
+                        className={`w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.date ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
                         value={form.date}
                         onChange={(e) => set('date', e.target.value)}
                         min={new Date().toISOString().split('T')[0]}
@@ -281,7 +281,7 @@ export default function BookingModal({ item, type, onClose }) {
                       <FaClock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
                       <input
                         type="time"
-                        className={`w-full pl-9 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.time ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
+                        className={`w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.time ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
                         value={form.time}
                         onChange={(e) => set('time', e.target.value)}
                       />
@@ -296,7 +296,7 @@ export default function BookingModal({ item, type, onClose }) {
                     type="number"
                     min={1}
                     max={type === 'Hall' ? 500 : 10}
-                    className={`w-full pl-9 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.guests ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
+                    className={`w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 ${errors.guests ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : ''}`}
                     value={form.guests}
                     onChange={(e) => set('guests', Math.max(1, +e.target.value))}
                   />
@@ -306,7 +306,7 @@ export default function BookingModal({ item, type, onClose }) {
                 <div className="relative">
                   <FaCommentDots className="absolute left-3.5 top-3 text-gray-400 text-xs" />
                   <textarea
-                    className="w-full pl-9 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 resize-none"
+                    className="w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all duration-200 resize-none"
                     rows={3}
                     value={form.specialRequests}
                     onChange={(e) => set('specialRequests', e.target.value)}

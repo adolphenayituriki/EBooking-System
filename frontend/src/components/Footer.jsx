@@ -42,7 +42,7 @@ export default function Footer() {
             <h3 className="text-lg sm:text-xl font-display font-bold text-white">Book Your Stay at Akarabo Hotel</h3>
             <p className="text-gray-500 text-sm mt-0.5">Book now and enjoy exclusive rates.</p>
           </div>
-          <Link to="/rooms" className="inline-flex items-center gap-2 bg-black text-white font-semibold px-6 py-3 rounded-xl transition-all text-sm border border-gray-700 whitespace-nowrap">
+          <Link to="/rooms" className="inline-flex items-center gap-2 bg-white text-black font-semibold px-6 py-3 rounded-xl transition-all text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap">
             Book Your Stay <FaArrowRight className="text-[10px]" />
           </Link>
         </div>

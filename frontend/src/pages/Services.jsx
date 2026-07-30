@@ -82,7 +82,7 @@ export default function Services() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                 filter === value
                   ? 'bg-gray-900 text-white shadow-md'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               <Icon className="text-xs" /> {label}
@@ -122,7 +122,7 @@ export default function Services() {
                     )}
                     <div className={`absolute inset-0 bg-gradient-to-t ${colors.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
                     <div className="absolute top-4 left-4">
-                      <span className={`badge bg-white/90 text-gray-700 backdrop-blur-sm border border-white/20`}>
+                      <span className="badge bg-gray-100 text-gray-700">
                         {svc.category}
                       </span>
                     </div>
@@ -160,7 +160,9 @@ export default function Services() {
 
         {!loading && filtered.length === 0 && (
           <div className="text-center py-20">
-            <FaSpa className="text-5xl text-gray-200 mx-auto mb-4" />
+            <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <FaSpa className="text-2xl text-gray-400" />
+            </div>
             <h3 className="font-display text-xl font-bold text-gray-600 mb-2">No services found</h3>
             <p className="text-gray-400">Try selecting a different category</p>
           </div>

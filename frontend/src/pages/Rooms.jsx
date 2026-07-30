@@ -65,7 +65,7 @@ export default function Rooms() {
               className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                 filter === t
                   ? 'bg-gray-900 text-white shadow-md'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               {t}
@@ -102,7 +102,7 @@ export default function Rooms() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                   <div className="absolute top-4 left-4">
-                    <span className="badge bg-white/90 text-gray-800 backdrop-blur-sm">{room.type}</span>
+                    <span className="badge bg-gray-100 text-gray-700">{room.type}</span>
                   </div>
                   {room.type === 'Presidential' && (
                     <div className="absolute top-4 right-4">
@@ -157,7 +157,9 @@ export default function Rooms() {
 
         {!loading && filtered.length === 0 && (
           <div className="text-center py-20">
-            <FaBed className="text-5xl text-gray-200 mx-auto mb-4" />
+            <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <FaBed className="text-2xl text-gray-400" />
+            </div>
             <h3 className="font-display text-xl font-bold text-gray-600 mb-2">No rooms found</h3>
             <p className="text-gray-400">Try selecting a different category</p>
           </div>

@@ -140,7 +140,7 @@ export default function Navbar() {
         <button
           onClick={() => setShowAuth(true)}
           className={`px-3 py-2 text-sm font-medium rounded-xl transition-all ${
-            isHome ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-black hover:bg-gray-100'
+            isHome ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-black hover:bg-gray-100'
           }`}
         >
           <span className="whitespace-nowrap">Sign In</span>
@@ -314,7 +314,7 @@ export default function Navbar() {
             )}
             <button
               onClick={handleBookNow}
-              className="w-full py-3 rounded-xl text-sm font-semibold bg-black text-white transition-all mt-1 whitespace-nowrap"
+              className="w-full py-3 rounded-xl text-sm font-semibold bg-black text-white shadow-lg transition-all hover:-translate-y-0.5 mt-2 whitespace-nowrap"
             >
               Book Your Stay &rarr;
             </button>

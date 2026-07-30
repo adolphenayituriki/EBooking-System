@@ -67,7 +67,7 @@ export default function AuthModal({ onClose, onDone }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-scale-in" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="bg-black px-5 pt-5 pb-4 text-white relative">
@@ -107,15 +107,15 @@ export default function AuthModal({ onClose, onDone }) {
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1"><FaUser className="inline mr-1 text-gray-400 text-[10px]" />Name</label>
                 <input
-                  className={`w-full px-3 py-2 bg-slate-50/80 border rounded-xl text-xs placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all ${errors.name ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'}`}
-                  value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="John Doe"
+                  className={`w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all ${errors.name ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'}`}
+                  value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="e.g. Jean Hakizimana"
                 />
                 {errors.name && <p className="text-red-500 text-[10px] mt-1 font-medium">{errors.name}</p>}
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1"><FaPhone className="inline mr-1 text-gray-400 text-[10px]" />Phone</label>
                 <input
-                  className="w-full px-3 py-2 bg-slate-50/80 border border-gray-200 rounded-xl text-xs placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all"
                   value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+250 788..."
                 />
               </div>
@@ -125,7 +125,7 @@ export default function AuthModal({ onClose, onDone }) {
             <label className="block text-xs font-medium text-gray-600 mb-1"><FaEnvelope className="inline mr-1 text-gray-400 text-[10px]" />Email</label>
             <input
               type="email"
-              className={`w-full px-3 py-2 bg-slate-50/80 border rounded-xl text-xs placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all ${errors.email ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'}`}
+              className={`w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all ${errors.email ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'}`}
               value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@email.com"
             />
             {errors.email && <p className="text-red-500 text-[10px] mt-1 font-medium">{errors.email}</p>}
@@ -135,7 +135,7 @@ export default function AuthModal({ onClose, onDone }) {
             <div className="relative">
               <input
                 type={showPw ? 'text' : 'password'}
-                className={`w-full px-3 py-2 bg-slate-50/80 border rounded-xl text-xs placeholder:text-slate-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all pr-9 ${errors.password ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'}`}
+                className={`w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 focus:bg-white outline-none transition-all pr-9 ${errors.password ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'}`}
                 value={form.password} onChange={(e) => set('password', e.target.value)} placeholder="Min 6 characters" minLength={6}
               />
               <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">

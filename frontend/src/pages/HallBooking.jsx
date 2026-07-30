@@ -74,7 +74,7 @@ export default function HallBooking() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                 filter === value
                   ? 'bg-gray-900 text-white shadow-md'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               <Icon className="text-xs" /> {label}
@@ -115,7 +115,7 @@ export default function HallBooking() {
                     )}
                     <div className={`absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent`} />
                     <div className="absolute top-4 left-4">
-                      <span className={`badge bg-white/90 text-gray-800 backdrop-blur-sm`}>{hall.type}</span>
+                      <span className="badge bg-gray-100 text-gray-700">{hall.type}</span>
                     </div>
                     <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-white text-sm font-medium">
@@ -161,7 +161,9 @@ export default function HallBooking() {
 
         {!loading && filtered.length === 0 && (
           <div className="text-center py-20">
-            <FaGlassCheers className="text-5xl text-gray-200 mx-auto mb-4" />
+            <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <FaGlassCheers className="text-2xl text-gray-400" />
+            </div>
             <h3 className="font-display text-xl font-bold text-gray-600 mb-2">No venues found</h3>
             <p className="text-gray-400">Try selecting a different category</p>
           </div>

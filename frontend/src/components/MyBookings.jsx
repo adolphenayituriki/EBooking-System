@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FaTimes, FaSpinner, FaCalendarCheck, FaBed, FaGlassCheers, FaSpa, FaClock } from 'react-icons/fa';
 import { getBookings } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { formatPrice } from '../utils/format';
 
 const typeIcons = { Room: FaBed, Service: FaSpa, Hall: FaGlassCheers };
 const statusColors = {
@@ -28,7 +29,7 @@ export default function MyBookings({ onClose }) {
   return (
     <div className="overlay animate-fade-in" onClick={onClose}>
       <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden shadow-modal animate-scale-in flex flex-col" onClick={(e) => e.stopPropagation()}>
-        <div className="bg-gradient-to-r from-gray-900 to-black p-6 text-white flex items-center justify-between">
+        <div className="bg-black p-6 text-white flex items-center justify-between">
           <div>
             <h3 className="font-display text-xl font-bold">My Bookings</h3>
             <p className="text-gray-400 text-sm">{user?.name} — {bookings.length} booking{bookings.length !== 1 ? 's' : ''}</p>
@@ -43,7 +44,9 @@ export default function MyBookings({ onClose }) {
             <div className="flex justify-center py-16"><FaSpinner className="animate-spin text-gray-500 text-2xl" /></div>
           ) : bookings.length === 0 ? (
             <div className="text-center py-16">
-              <FaCalendarCheck className="text-4xl text-gray-200 mx-auto mb-3" />
+              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <FaCalendarCheck className="text-2xl text-gray-400" />
+              </div>
               <p className="font-semibold text-gray-600">No bookings yet</p>
               <p className="text-gray-400 text-sm mt-1">Your reservations will appear here</p>
             </div>
@@ -68,7 +71,7 @@ export default function MyBookings({ onClose }) {
                       </div>
                       <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
                         <span className="flex items-center gap-1"><FaClock /> {new Date(b.createdAt).toLocaleDateString()}</span>
-                        <span className="font-semibold text-gray-900">${b.totalPrice}</span>
+                        <span className="font-semibold text-gray-900">{formatPrice(b.totalPrice)}</span>
                       </div>
                     </div>
                   </div>
