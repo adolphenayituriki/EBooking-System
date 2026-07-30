@@ -47,12 +47,12 @@ export default function Navbar() {
   const Logo = () => (
     <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
       <div className="flex flex-col">
-        <span className={`text-lg font-display font-bold tracking-[0.15em] leading-tight ${
+        <span className={`text-xl font-display font-bold tracking-[0.2em] leading-tight ${
           isHome ? 'text-white' : 'text-black'
         }`}>
           AKARABO
         </span>
-        <span className="text-[9px] font-medium tracking-[0.3em] uppercase text-gray-400">
+        <span className="text-[10px] font-medium tracking-[0.35em] uppercase text-gray-400">
           Hotel & Spa
         </span>
       </div>
@@ -86,71 +86,75 @@ export default function Navbar() {
   );
 
   const actions = (
-    <div className="flex items-center justify-end gap-2 w-[22%] shrink-0">
-      <a
-        href="tel:+250788123456"
-        className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all ${
-          isHome ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-500 hover:text-black hover:bg-gray-100'
-        }`}
-        aria-label="Call us"
-      >
-        <FaPhoneAlt className="text-xs" />
-      </a>
-
-      {user ? (
-        <div className="relative" ref={userMenuRef}>
-          <button
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all ${
-              isHome ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-100'
-            } ${showUserMenu ? (isHome ? 'bg-gray-800' : 'bg-gray-100') : ''}`}
-          >
-            <div className="w-7 h-7 bg-black rounded-lg flex items-center justify-center">
-              <span className="text-[11px] font-bold text-white">
-                {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-              </span>
-            </div>
-            <span className="text-sm font-medium max-w-[100px] truncate hidden xl:block">{user.name}</span>
-            <FaChevronDown className={`text-[10px] transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
-          </button>
-
-          {showUserMenu && (
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-200 py-2 animate-scale-in overflow-hidden">
-              <div className="px-4 py-2.5 border-b border-gray-200 mb-1">
-                <p className="text-sm font-semibold text-black truncate">{user.name}</p>
-                <p className="text-xs text-gray-500 truncate">{user.email}</p>
-              </div>
-              <button
-                onClick={() => { setShowBookings(true); setShowUserMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                <FaCalendarCheck className="text-gray-500 text-xs" /> My Bookings
-              </button>
-              <hr className="my-1 border-gray-200" />
-              <button
-                onClick={() => { logout(); setShowUserMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
-              >
-                <FaSignOutAlt className="text-xs" /> Sign Out
-              </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        <button
-          onClick={() => setShowAuth(true)}
-          className={`px-3 py-2 text-sm font-medium rounded-xl transition-all ${
-            isHome ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-black hover:bg-gray-100'
+    <div className="flex flex-col items-end gap-1.5 w-[22%] shrink-0">
+      <div className="flex items-center gap-2 h-9">
+        <a
+          href="tel:+250788123456"
+          className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all ${
+            isHome ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-500 hover:text-black hover:bg-gray-100'
           }`}
+          aria-label="Call us"
         >
-          <span className="whitespace-nowrap">Sign In</span>
-        </button>
-      )}
+          <FaPhoneAlt className="text-xs" />
+        </a>
+
+        {user ? (
+          <div className="relative" ref={userMenuRef}>
+            <button
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all ${
+                isHome ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-100'
+              } ${showUserMenu ? (isHome ? 'bg-gray-800' : 'bg-gray-100') : ''}`}
+            >
+              <div className="w-7 h-7 bg-black rounded-lg flex items-center justify-center">
+                <span className="text-[11px] font-bold text-white">
+                  {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                </span>
+              </div>
+              <span className="text-sm font-medium max-w-[100px] truncate hidden xl:block">{user.name}</span>
+              <FaChevronDown className={`text-[10px] transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
+            </button>
+
+            {showUserMenu && (
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-200 py-2 animate-scale-in overflow-hidden">
+                <div className="px-4 py-2.5 border-b border-gray-200 mb-1">
+                  <p className="text-sm font-semibold text-black truncate">{user.name}</p>
+                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                </div>
+                <button
+                  onClick={() => { setShowBookings(true); setShowUserMenu(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  <FaCalendarCheck className="text-gray-500 text-xs" /> My Bookings
+                </button>
+                <hr className="my-1 border-gray-200" />
+                <button
+                  onClick={() => { logout(); setShowUserMenu(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
+                >
+                  <FaSignOutAlt className="text-xs" /> Sign Out
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowAuth(true)}
+            className={`px-3 py-2 text-sm font-medium rounded-xl transition-all ${
+              isHome ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-black hover:bg-gray-100'
+            }`}
+          >
+            <span className="whitespace-nowrap">Sign In</span>
+          </button>
+        )}
+      </div>
 
       <button
         onClick={handleBookNow}
-        className={`text-sm font-semibold py-2.5 px-5 rounded-2xl transition-all ${
-          isHome ? 'bg-white text-black' : 'bg-black text-white'
+        className={`text-sm font-semibold py-2.5 px-6 rounded-2xl transition-all shadow-lg hover:-translate-y-0.5 ${
+          isHome
+            ? 'bg-white text-black hover:bg-gray-100'
+            : 'bg-black text-white hover:bg-gray-800'
         }`}
       >
         Book Your Stay &rarr;
@@ -231,7 +235,7 @@ export default function Navbar() {
       </div>
 
       {/* Placeholder for fixed header */}
-      <div className={isHome ? 'h-[calc(36px+20px+68px)]' : 'h-[68px]'} />
+      <div className={isHome ? 'h-[68px] lg:h-[168px]' : 'h-[68px] lg:h-[104px]'} />
 
       {/* Mobile overlay */}
       {open && (
