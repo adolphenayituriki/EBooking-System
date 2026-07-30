@@ -255,7 +255,7 @@ export default function Home() {
       </section>
 
       {/* Stats */}
-      <section className="py-14 bg-black">
+      <section className="py-16 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <span className="text-gray-600 text-xs font-medium uppercase tracking-[0.2em]">Our Numbers</span>
@@ -457,7 +457,7 @@ export default function Home() {
       {/* CTA + Newsletter */}
       <section className="py-16 bg-black relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1549638441-b787d2e11f14?w=1600&q=80')] bg-cover bg-center opacity-5" />
-        <div className="relative max-w-4xl mx-auto px-4">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-5 gap-10 items-center">
             <div className="md:col-span-3">
               <h2 className="text-2xl md:text-3xl font-display font-bold text-white mt-2 mb-3 leading-tight">
