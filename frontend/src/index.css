@@ -10,7 +10,7 @@
     @apply antialiased;
   }
   body {
-    @apply font-body text-gray-900 bg-white;
+    @apply font-body text-gray-300 bg-black;
   }
   h1, h2, h3, h4 {
     @apply font-display;

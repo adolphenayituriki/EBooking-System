@@ -14,11 +14,11 @@ const contactInfo = [
 ];
 
 function FormField({ label, field, type = 'text', icon: Icon, error, ...props }) {
-  const inputClasses = `w-full pl-8 pr-3 py-2.5 bg-white border rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900 outline-none transition-all duration-200 resize-none ${error ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200 hover:border-gray-300'}`;
+  const inputClasses = `w-full pl-8 pr-3 py-2.5 bg-gray-800/60 border rounded-xl text-sm text-white placeholder:text-gray-500 focus:ring-2 focus:ring-gray-400/30 focus:border-gray-400 outline-none transition-all duration-200 resize-none ${error ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-700 hover:border-gray-600'}`;
 
   return (
     <div>
-      <label className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-1.5">
+      <label className="text-sm font-medium text-gray-300 mb-1 flex items-center gap-1.5">
         {Icon && <Icon className="text-gray-400 text-xs" />}
         {label}
       </label>
@@ -120,35 +120,35 @@ export default function Contact() {
         </div>
       </section>
 
-      <section className="py-10">
+      <section className="py-10 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 -mt-8 relative z-10 mb-6">
           {contactInfo.map(({ icon: Icon, label, value, sub }, i) => (
-            <div key={label} className="bg-white border border-gray-200 rounded-2xl p-3 text-center shadow-card hover:shadow-card-hover hover:-translate-y-1 hover:border-gray-300 group transition-all duration-300 animate-in-delay-1" style={{ animationDelay: `${i * 0.1}s` }}>
-              <div className="w-8 h-8 bg-gray-100 group-hover:bg-gray-200 rounded-lg flex items-center justify-center mx-auto mb-2 transition-colors">
-                <Icon className="text-gray-600 group-hover:text-gray-900 transition-colors text-xs" />
+            <div key={label} className="bg-gray-900 border border-gray-800 rounded-2xl p-3 text-center shadow-card hover:shadow-card-hover hover:-translate-y-1 hover:border-gray-700 group transition-all duration-300 animate-in-delay-1" style={{ animationDelay: `${i * 0.1}s` }}>
+              <div className="w-8 h-8 bg-gray-800 group-hover:bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-2 transition-colors">
+                <Icon className="text-gray-400 group-hover:text-white transition-colors text-xs" />
               </div>
-              <h3 className="font-display font-semibold text-gray-900 text-xs mb-1">{label}</h3>
-              <p className="text-gray-800 font-medium text-xs">{value}</p>
-              <p className="text-gray-400 text-[10px] mt-0.5">{sub}</p>
+              <h3 className="font-display font-semibold text-white text-xs mb-1">{label}</h3>
+              <p className="text-gray-200 font-medium text-xs">{value}</p>
+              <p className="text-gray-500 text-[10px] mt-0.5">{sub}</p>
             </div>
           ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-3">
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-card p-4">
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl shadow-card p-4">
               <div className="mb-3">
-                <h2 className="font-display text-lg font-bold text-gray-900 mb-1">Send Us a Message</h2>
-                <p className="text-gray-500 text-sm">Fill out the form below and our team will get back to you shortly.</p>
+                <h2 className="font-display text-lg font-bold text-white mb-1">Send Us a Message</h2>
+                <p className="text-gray-400 text-sm">Fill out the form below and our team will get back to you shortly.</p>
               </div>
 
               {sent && (
-                <div className="bg-green-50 border border-green-200 rounded-xl p-3 mb-3 flex items-start gap-2 animate-slide-down">
-                  <FaCheckCircle className="text-green-600 mt-0.5 shrink-0" />
+                <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-3 mb-3 flex items-start gap-2 animate-slide-down">
+                  <FaCheckCircle className="text-green-400 mt-0.5 shrink-0" />
                   <div>
-                    <p className="font-semibold text-green-800 text-sm">Message Sent!</p>
-                    <p className="text-green-700 text-xs">Thank you for reaching out. We will respond within 24 hours.</p>
+                    <p className="font-semibold text-green-300 text-sm">Message Sent!</p>
+                    <p className="text-green-400 text-xs">Thank you for reaching out. We will respond within 24 hours.</p>
                   </div>
                 </div>
               )}
@@ -164,7 +164,7 @@ export default function Contact() {
                 </div>
                 <FormField label="Your Message" field="message" type="textarea" icon={FaCommentDots} value={form.message} onChange={(e) => set('message', e.target.value)} placeholder="Tell us how we can help you..." error={errors.message} />
 
-                <button type="submit" disabled={loading} className="inline-flex items-center justify-center gap-2 bg-black hover:bg-gray-800 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 w-full sm:w-auto">
+                <button type="submit" disabled={loading} className="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-200 text-black font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 w-full sm:w-auto">
                   {loading ? (
                     <><FaSpinner className="animate-spin" /> Sending...</>
                   ) : (
@@ -176,7 +176,7 @@ export default function Contact() {
           </div>
 
           <div className="lg:col-span-2">
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-card overflow-hidden h-full min-h-[220px]">
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl shadow-card overflow-hidden h-full min-h-[220px]">
               <iframe
                 title="Akarabo Hotel Location"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.5!2d29.87!3d-1.94!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwNTYnMjQuMCJTIDI5wrA1MicxMi4wRQ!5e0!3m2!1sen!2srw!4v1"

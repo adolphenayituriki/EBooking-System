@@ -58,7 +58,7 @@ export default function Rooms() {
         </div>
       </section>
 
-      <section className="py-10">
+      <section className="py-10 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
           <FaFilter className="text-gray-400 shrink-0" />
@@ -68,8 +68,8 @@ export default function Rooms() {
               onClick={() => setFilter(t)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   filter === t
-                    ? 'bg-black text-white shadow-md'
-                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300'
+                    ? 'bg-white text-black shadow-md'
+                    : 'bg-gray-900 border border-gray-800 text-gray-400 hover:bg-gray-800 hover:border-gray-700'
                 }`}
             >
               {t}
@@ -87,8 +87,8 @@ export default function Rooms() {
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((room, i) => (
-              <div key={room._id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:border-gray-300 group transition-all duration-300 flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
-                <div className="h-40 bg-gray-100 relative overflow-hidden cursor-pointer group" onClick={() => setPreview(room)}>
+              <div key={room._id} className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:border-gray-700 group transition-all duration-300 flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
+                <div className="h-40 bg-gray-800 relative overflow-hidden cursor-pointer group" onClick={() => setPreview(room)}>
                   <img
                     src={roomImages[room.type] || roomImages.Single}
                     alt={room.name}
@@ -98,7 +98,7 @@ export default function Rooms() {
                   <Spinner className="absolute inset-0" size="text-xl" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                   <div className="absolute top-2.5 left-2.5">
-                    <span className="bg-white/90 text-gray-800 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">{room.type}</span>
+                    <span className="bg-gray-900/80 text-gray-200 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">{room.type}</span>
                   </div>
                   {room.type === 'Presidential' && (
                     <div className="absolute top-2.5 right-2.5">
@@ -110,10 +110,10 @@ export default function Rooms() {
                 </div>
 
                 <div className="p-4 flex flex-col flex-1">
-                  <h3 className="font-display text-base font-bold text-gray-900 mb-1 leading-tight">{room.name}</h3>
-                  <p className="text-gray-500 text-[13px] mb-2.5 leading-relaxed flex-1">{room.description}</p>
+                  <h3 className="font-display text-base font-bold text-white mb-1 leading-tight">{room.name}</h3>
+                  <p className="text-gray-400 text-[13px] mb-2.5 leading-relaxed flex-1">{room.description}</p>
 
-                  <div className="flex items-center gap-3 text-xs text-gray-500 mb-2.5">
+                  <div className="flex items-center gap-3 text-xs text-gray-400 mb-2.5">
                     <span className="flex items-center gap-1">
                       <FaUsers className="text-gray-400 text-[11px]" /> {room.capacity} {room.capacity === 1 ? 'Guest' : 'Guests'}
                     </span>
@@ -124,19 +124,19 @@ export default function Rooms() {
 
                   <div className="flex flex-wrap gap-1 mb-3">
                     {room.amenities?.slice(0, 4).map((a) => (
-                      <span key={a} className="text-[10px] bg-gray-50 text-gray-600 px-1.5 py-0.5 rounded-md border border-gray-200">{a}</span>
+                      <span key={a} className="text-[10px] bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded-md border border-gray-700">{a}</span>
                     ))}
                     {room.amenities?.length > 4 && (
-                      <span className="text-[10px] bg-gray-50 text-gray-400 px-1.5 py-0.5 rounded-md border border-gray-200">+{room.amenities.length - 4}</span>
+                      <span className="text-[10px] bg-gray-800 text-gray-500 px-1.5 py-0.5 rounded-md border border-gray-700">+{room.amenities.length - 4}</span>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-2.5 border-t border-gray-100 mt-auto">
+                  <div className="flex items-center justify-between pt-2.5 border-t border-gray-800 mt-auto">
                     <div>
-                      <span className="text-lg font-display font-bold text-gray-900">{formatPrice(room.price)}</span>
-                      <span className="text-gray-400 text-xs"> / night</span>
+                      <span className="text-lg font-display font-bold text-white">{formatPrice(room.price)}</span>
+                      <span className="text-gray-500 text-xs"> / night</span>
                     </div>
-                    <button onClick={() => setSelected(room)} className="bg-black hover:bg-gray-800 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-all hover:-translate-y-0.5">
+                    <button onClick={() => setSelected(room)} className="bg-white hover:bg-gray-200 text-black text-xs font-semibold px-3.5 py-2 rounded-xl transition-all hover:-translate-y-0.5">
                       Book Now
                     </button>
                   </div>
@@ -148,10 +148,10 @@ export default function Rooms() {
 
         {!loading && filtered.length === 0 && (
           <div className="text-center py-10">
-            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center mx-auto mb-3">
               <FaBed className="text-xl text-gray-400" />
             </div>
-            <h3 className="font-display text-lg font-bold text-gray-600 mb-1">No rooms found</h3>
+            <h3 className="font-display text-lg font-bold text-gray-300 mb-1">No rooms found</h3>
             <p className="text-gray-400 text-sm">Try selecting a different category</p>
           </div>
         )}

@@ -68,7 +68,7 @@ export default function HallBooking() {
         </div>
       </section>
 
-      <section className="py-10">
+      <section className="py-10 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
           {types.map(({ value, label, icon: Icon }) => (
@@ -77,8 +77,8 @@ export default function HallBooking() {
               onClick={() => setFilter(value)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   filter === value
-                    ? 'bg-black text-white shadow-md'
-                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300'
+                    ? 'bg-white text-black shadow-md'
+                    : 'bg-gray-900 border border-gray-800 text-gray-400 hover:bg-gray-800 hover:border-gray-700'
               }`}
             >
               <Icon className="text-xs" /> {label}
@@ -98,8 +98,8 @@ export default function HallBooking() {
               const cfg = typeConfig[hall.type] || typeConfig.Conference;
               const Icon = cfg.icon;
               return (
-                <div key={hall._id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:border-gray-300 group transition-all duration-300 flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
-                  <div className="h-40 bg-gray-100 relative overflow-hidden cursor-pointer group" onClick={() => setPreview(hall)}>
+                <div key={hall._id} className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:border-gray-700 group transition-all duration-300 flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
+                  <div className="h-40 bg-gray-800 relative overflow-hidden cursor-pointer group" onClick={() => setPreview(hall)}>
                     {(hall.images?.[0] || cfg.image) && (
                       <img
                         src={hall.images?.[0] || cfg.image}
@@ -110,7 +110,7 @@ export default function HallBooking() {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <div className="absolute top-3 left-3">
-                      <span className="bg-white/90 text-gray-800 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">{hall.type}</span>
+                      <span className="bg-gray-900/80 text-gray-200 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">{hall.type}</span>
                     </div>
                     <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-white text-xs font-medium">
@@ -124,26 +124,26 @@ export default function HallBooking() {
                   </div>
 
                   <div className="p-4 flex flex-col flex-1">
-                    <h3 className="font-display text-lg font-bold text-gray-900 mb-1.5">{hall.name}</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-3 flex-1">{hall.description}</p>
+                    <h3 className="font-display text-lg font-bold text-white mb-1.5">{hall.name}</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed mb-3 flex-1">{hall.description}</p>
 
                     <div className="flex flex-wrap gap-1.5 mb-3">
                       {hall.amenities?.slice(0, 4).map((a) => (
-                        <span key={a} className="flex items-center gap-1 text-[10px] bg-gray-50 text-gray-600 px-2 py-0.5 rounded-md border border-gray-200">
-                          <FaCheckCircle className="text-gray-400 text-[10px]" /> {a}
+                        <span key={a} className="flex items-center gap-1 text-[10px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded-md border border-gray-700">
+                          <FaCheckCircle className="text-gray-500 text-[10px]" /> {a}
                         </span>
                       ))}
                       {hall.amenities?.length > 4 && (
-                        <span className="text-[10px] bg-gray-50 text-gray-400 px-2 py-0.5 rounded-md border border-gray-200">+{hall.amenities.length - 4}</span>
+                        <span className="text-[10px] bg-gray-800 text-gray-500 px-2 py-0.5 rounded-md border border-gray-700">+{hall.amenities.length - 4}</span>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-auto">
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-800 mt-auto">
                       <div>
-                    <span className="text-lg font-display font-bold text-gray-900">{formatPrice(hall.price)}</span>
-                    <span className="text-gray-400 text-sm"> / event</span>
+                    <span className="text-lg font-display font-bold text-white">{formatPrice(hall.price)}</span>
+                    <span className="text-gray-500 text-sm"> / event</span>
                       </div>
-                      <button onClick={() => setSelected(hall)} className="bg-black hover:bg-gray-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:-translate-y-0.5">
+                      <button onClick={() => setSelected(hall)} className="bg-white hover:bg-gray-200 text-black text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:-translate-y-0.5">
                         Book Hall
                       </button>
                     </div>
@@ -156,10 +156,10 @@ export default function HallBooking() {
 
         {!loading && filtered.length === 0 && (
           <div className="text-center py-10">
-            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center mx-auto mb-3">
               <FaGlassCheers className="text-xl text-gray-400" />
             </div>
-            <h3 className="font-display text-lg font-bold text-gray-600 mb-1">No venues found</h3>
+            <h3 className="font-display text-lg font-bold text-gray-300 mb-1">No venues found</h3>
             <p className="text-gray-400 text-sm">Try selecting a different category</p>
           </div>
         )}

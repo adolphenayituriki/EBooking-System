@@ -81,7 +81,7 @@ export default function Navbar() {
 
   const Logo = () => (
     <Link to="/" className="flex items-center shrink-0 group" aria-label="Akarabo Hotel & Spa">
-      <div className={`w-12 h-12 rounded-full overflow-hidden border-2 transition-colors ${isHome ? 'border-gray-600 group-hover:border-white' : 'border-gray-200 group-hover:border-black'}`}>
+      <div className={`w-12 h-12 rounded-full overflow-hidden border-2 transition-colors border-gray-600 group-hover:border-white`}>
         <img src="/Logo.png" alt="Akarabo Hotel & Spa" className="w-full h-full object-cover scale-125" />
       </div>
     </Link>
@@ -99,14 +99,14 @@ export default function Navbar() {
           >
             <span className={`${
               isActive
-                ? isHome ? 'text-white' : 'text-black'
-                : isHome ? 'text-gray-400 group-hover:text-white' : 'text-gray-600 group-hover:text-black'
+                ? 'text-white'
+                : 'text-gray-400 group-hover:text-white'
             }`}>
               {l.label}
             </span>
             <span className={`absolute -bottom-0.5 left-0 h-[2px] rounded-full transition-all duration-300 ${
               isActive ? 'w-full' : 'w-0 group-hover:w-full'
-            } ${isHome ? 'bg-white' : 'bg-black'}`} />
+            } bg-white`} />
           </Link>
         );
       })}
@@ -117,11 +117,7 @@ export default function Navbar() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setShowNotifs(!showNotifs)}
-        className={`relative w-9 h-9 flex items-center justify-center rounded-xl transition-all border ${
-          isHome
-            ? 'text-gray-200 border-gray-600 bg-gray-800/60 hover:bg-gray-700 hover:text-white'
-            : 'text-gray-600 border-gray-300 bg-gray-50 hover:bg-gray-200 hover:text-black'
-        } ${showNotifs ? (isHome ? 'bg-gray-700' : 'bg-gray-200') : ''}`}
+        className={`relative w-9 h-9 flex items-center justify-center rounded-xl transition-all border text-gray-200 border-gray-600 bg-gray-800/60 hover:bg-gray-700 hover:text-white ${showNotifs ? 'bg-gray-700' : ''}`}
         aria-label="Notifications"
       >
         <FaBell className="text-sm" />
@@ -133,39 +129,39 @@ export default function Navbar() {
       </button>
 
       {showNotifs && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-w-[85vw] bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden animate-scale-in">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-            <p className="text-sm font-semibold text-black">Notifications</p>
+        <div className="absolute right-0 top-full mt-2 w-80 max-w-[85vw] bg-gray-900 rounded-2xl shadow-xl border border-gray-800 overflow-hidden animate-scale-in">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
+            <p className="text-sm font-semibold text-white">Notifications</p>
             {unread > 0 && (
-              <button onClick={markAllRead} className="text-xs font-medium text-gray-500 hover:text-black transition-colors">
+              <button onClick={markAllRead} className="text-xs font-medium text-gray-400 hover:text-white transition-colors">
                 Mark all read
               </button>
             )}
           </div>
           <div className="max-h-80 overflow-y-auto">
             {notifs.length === 0 ? (
-              <p className="text-sm text-gray-500 text-center py-8">No notifications yet</p>
+              <p className="text-sm text-gray-400 text-center py-8">No notifications yet</p>
             ) : (
               notifs.map((n) => (
                 <div
                   key={n.id}
                   onClick={() => setNotifs((ps) => ps.map((x) => x.id === n.id ? { ...x, read: true } : x))}
-                  className={`w-full flex items-start gap-3 px-4 py-3 text-left transition-colors cursor-pointer border-b border-gray-100 last:border-0 ${
-                    n.read ? 'bg-white hover:bg-gray-50' : 'bg-gray-50/70 hover:bg-gray-100'
+                  className={`w-full flex items-start gap-3 px-4 py-3 text-left transition-colors cursor-pointer border-b border-gray-800 last:border-0 ${
+                    n.read ? 'bg-gray-900 hover:bg-gray-800' : 'bg-gray-800/60 hover:bg-gray-800'
                   }`}
                 >
                   <span className={`w-8 h-8 flex items-center justify-center rounded-lg shrink-0 ${
-                    n.read ? 'bg-gray-100 text-gray-400' : 'bg-black text-white'
+                    n.read ? 'bg-gray-800 text-gray-400' : 'bg-white text-black'
                   }`}>
                     <n.icon className="text-xs" />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-2">
-                      <span className={`text-sm ${n.read ? 'text-gray-500' : 'text-black font-semibold'}`}>{n.title}</span>
+                      <span className={`text-sm ${n.read ? 'text-gray-500' : 'text-white font-semibold'}`}>{n.title}</span>
                       {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />}
                     </span>
-                    <span className="block text-xs text-gray-500 truncate">{n.desc}</span>
-                    <span className="block text-[10px] text-gray-400 mt-0.5">{n.time}</span>
+                    <span className="block text-xs text-gray-400 truncate">{n.desc}</span>
+                    <span className="block text-[10px] text-gray-500 mt-0.5">{n.time}</span>
                   </span>
                 </div>
               ))
@@ -180,41 +176,37 @@ export default function Navbar() {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setShowUserMenu(!showUserMenu)}
-        className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all border ${
-          isHome
-            ? 'text-gray-200 border-gray-600 bg-gray-800/60 hover:bg-gray-700 hover:text-white'
-            : 'text-gray-600 border-gray-300 bg-gray-50 hover:bg-gray-200 hover:text-black'
-        } ${showUserMenu ? (isHome ? 'bg-gray-700' : 'bg-gray-200') : ''}`}
+        className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all border text-gray-200 border-gray-600 bg-gray-800/60 hover:bg-gray-700 hover:text-white ${showUserMenu ? 'bg-gray-700' : ''}`}
         aria-label="Account"
       >
         <FaUser className="text-sm" />
       </button>
 
       {showUserMenu && (
-        <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-200 py-2 animate-scale-in overflow-hidden">
-          <div className="px-4 py-2.5 border-b border-gray-200 mb-1">
-            <p className="text-sm font-semibold text-black truncate">{user.name}</p>
-            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+        <div className="absolute right-0 top-full mt-2 w-48 bg-gray-900 rounded-2xl shadow-xl border border-gray-800 py-2 animate-scale-in overflow-hidden">
+          <div className="px-4 py-2.5 border-b border-gray-800 mb-1">
+            <p className="text-sm font-semibold text-white truncate">{user.name}</p>
+            <p className="text-xs text-gray-400 truncate">{user.email}</p>
           </div>
           <button
             onClick={() => { setShowBookings(true); setShowUserMenu(false); }}
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 transition-colors"
           >
-            <FaCalendarCheck className="text-gray-500 text-xs" /> My Bookings
+            <FaCalendarCheck className="text-gray-400 text-xs" /> My Bookings
           </button>
           {user.role === 'admin' && (
             <Link
               to="/admin"
               onClick={() => setShowUserMenu(false)}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 transition-colors"
             >
-              <FaTachometerAlt className="text-gray-500 text-xs" /> Admin Dashboard
+              <FaTachometerAlt className="text-gray-400 text-xs" /> Admin Dashboard
             </Link>
           )}
-          <hr className="my-1 border-gray-200" />
+          <hr className="my-1 border-gray-800" />
           <button
             onClick={() => { logout(); setShowUserMenu(false); navigate('/'); }}
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-gray-800 transition-colors"
           >
             <FaSignOutAlt className="text-xs" /> Sign Out
           </button>
@@ -224,11 +216,7 @@ export default function Navbar() {
   ) : compact ? (
     <button
       onClick={() => setShowAuth(true)}
-      className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all border ${
-        isHome
-          ? 'text-gray-200 border-gray-600 bg-gray-800/60 hover:bg-gray-700 hover:text-white'
-          : 'text-gray-600 border-gray-300 bg-gray-50 hover:bg-gray-200 hover:text-black'
-      }`}
+      className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all border text-gray-200 border-gray-600 bg-gray-800/60 hover:bg-gray-700 hover:text-white`}
       aria-label="Sign in"
     >
       <FaUser className="text-sm" />
@@ -236,9 +224,7 @@ export default function Navbar() {
   ) : (
     <button
       onClick={() => setShowAuth(true)}
-      className={`px-3 py-2 text-sm font-medium rounded-xl transition-all ${
-        isHome ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-black hover:bg-gray-100'
-      }`}
+      className={`px-3 py-2 text-sm font-medium rounded-xl transition-all text-gray-300 hover:text-white hover:bg-gray-800`}
     >
       <span className="whitespace-nowrap">Sign In</span>
     </button>
@@ -250,9 +236,7 @@ export default function Navbar() {
       {profileBtn(false, userMenuRefDesktop)}
       <button
         onClick={handleBookNow}
-        className={`text-sm font-semibold py-2.5 px-4 xl:px-5 rounded-xl whitespace-nowrap transition-all ${
-          isHome ? 'bg-white text-black' : 'bg-black text-white'
-        }`}
+        className={`text-sm font-semibold py-2.5 px-4 xl:px-5 rounded-xl whitespace-nowrap transition-all bg-white text-black`}
       >
         Book Your Stay &rarr;
       </button>
@@ -312,8 +296,8 @@ export default function Navbar() {
             </nav>
           </div>
         ) : (
-          /* Solid white style */
-          <nav className="bg-white border-b border-gray-200">
+          /* Solid black style on all pages */
+          <nav className="bg-black border-b border-gray-800">
             <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3 lg:py-[14px]">
               <div className="hidden lg:flex items-center justify-between w-full">
                 <div className="w-[22%] shrink-0"><Logo /></div>
@@ -327,7 +311,7 @@ export default function Navbar() {
                   {notifBtn(notifRefMobile)}
                   <button
                     onClick={() => setOpen(!open)}
-                    className="relative z-50 w-10 h-10 flex items-center justify-center rounded-xl text-gray-500"
+                    className="relative z-50 w-10 h-10 flex items-center justify-center rounded-xl text-gray-300"
                     aria-label={open ? 'Close menu' : 'Open menu'}
                   >
                     {open ? <FaTimes className="text-lg" /> : <FaBars className="text-lg" />}
@@ -353,15 +337,15 @@ export default function Navbar() {
       {/* Mobile drawer */}
       <div className={`lg:hidden fixed top-0 right-0 z-50 h-full w-[320px] max-w-[85vw] transition-transform duration-300 ease-out ${
         open ? 'translate-x-0' : 'translate-x-full'
-      } bg-white flex flex-col shadow-2xl`}>
+      } bg-gray-950 flex flex-col shadow-2xl`}>
         {/* Drawer header */}
-        <div className="flex items-center justify-between px-5 h-[76px] shrink-0 border-b border-gray-200">
-          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 shrink-0">
+        <div className="flex items-center justify-between px-5 h-[76px] shrink-0 border-b border-gray-800">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-700 shrink-0">
             <img src="/Logo.png" alt="Akarabo Hotel & Spa" className="w-full h-full object-cover scale-125" />
           </div>
           <button
             onClick={() => setOpen(false)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors"
             aria-label="Close menu"
           >
             <FaTimes />
@@ -370,15 +354,15 @@ export default function Navbar() {
 
         <div className="flex flex-col flex-1 min-h-0 overflow-y-auto px-5 pb-6 pt-2">
           {user && (
-            <div className="flex items-center gap-3 mb-5 p-3 rounded-2xl bg-gray-50 border border-gray-200">
-              <div className="w-11 h-11 bg-black rounded-2xl flex items-center justify-center shrink-0">
-                <span className="text-sm font-bold text-white">
+            <div className="flex items-center gap-3 mb-5 p-3 rounded-2xl bg-gray-900 border border-gray-800">
+              <div className="w-11 h-11 bg-white rounded-2xl flex items-center justify-center shrink-0">
+                <span className="text-sm font-bold text-black">
                   {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                 </span>
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-black truncate">{user.name}</p>
-                <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                <p className="text-sm font-semibold text-white truncate">{user.name}</p>
+                <p className="text-xs text-gray-400 truncate">{user.email}</p>
               </div>
             </div>
           )}
@@ -393,44 +377,44 @@ export default function Navbar() {
                   to={l.to}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? 'text-black bg-gray-100'
-                      : 'text-gray-600 hover:text-black hover:bg-gray-100'
+                      ? 'text-white bg-gray-800'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-800'
                   }`}
                   style={{ transitionDelay: `${i * 30}ms` }}
                 >
                   <span className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${
-                    isActive ? 'bg-black text-white' : 'bg-gray-100 text-gray-500'
+                    isActive ? 'bg-white text-black' : 'bg-gray-800 text-gray-400'
                   }`}>
                     <Icon className="text-[13px]" />
                   </span>
                   {l.label}
-                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-black" />}
+                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="pt-4 border-t border-gray-200 space-y-2 mt-4">
+          <div className="pt-4 border-t border-gray-800 space-y-2 mt-4">
             {user ? (
               <>
                 <button
                   onClick={() => { setShowBookings(true); setOpen(false); }}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
                 >
-                  <FaCalendarCheck className="text-gray-500 text-xs" /> My Bookings
+                  <FaCalendarCheck className="text-gray-400 text-xs" /> My Bookings
                 </button>
                 {user.role === 'admin' && (
                   <Link
                     to="/admin"
                     onClick={() => setOpen(false)}
-                    className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
                   >
-                    <FaTachometerAlt className="text-gray-500 text-xs" /> Admin Dashboard
+                    <FaTachometerAlt className="text-gray-400 text-xs" /> Admin Dashboard
                   </Link>
                 )}
                 <button
                   onClick={() => { logout(); setOpen(false); navigate('/'); }}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-100 transition-colors"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-gray-800 transition-colors"
                 >
                   <FaSignOutAlt className="text-xs" /> Sign Out
                 </button>
@@ -438,7 +422,7 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={() => { setShowAuth(true); setOpen(false); }}
-                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
               >
                 <FaUser className="text-xs" /> Sign In
               </button>

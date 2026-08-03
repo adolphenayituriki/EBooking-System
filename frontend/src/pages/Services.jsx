@@ -72,7 +72,7 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="py-10">
+      <section className="py-10 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map(({ value, label, icon: Icon }) => (
@@ -81,8 +81,8 @@ export default function Services() {
               onClick={() => setFilter(value)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   filter === value
-                    ? 'bg-black text-white shadow-md'
-                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300'
+                    ? 'bg-white text-black shadow-md'
+                    : 'bg-gray-900 border border-gray-800 text-gray-400 hover:bg-gray-800 hover:border-gray-700'
               }`}
             >
               <Icon className="text-xs" /> {label}
@@ -101,8 +101,8 @@ export default function Services() {
             {filtered.map((svc, i) => {
               const colors = categoryColors[svc.category] || categoryColors.Other;
               return (
-                <div key={svc._id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:border-gray-300 group transition-all duration-300 flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
-                  <div className="h-36 bg-gray-100 relative overflow-hidden cursor-pointer group" onClick={() => setPreview(svc)}>
+                <div key={svc._id} className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:border-gray-700 group transition-all duration-300 flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
+                  <div className="h-36 bg-gray-800 relative overflow-hidden cursor-pointer group" onClick={() => setPreview(svc)}>
                     {(svc.image || colors.image) && (
                       <img
                         src={svc.image || colors.image}
@@ -114,7 +114,7 @@ export default function Services() {
                     {(svc.image || colors.image) && <Spinner className="absolute inset-0" size="text-lg" />}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                     <div className="absolute top-3 left-3">
-                      <span className="bg-white/90 text-gray-800 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">
+                      <span className="bg-gray-900/80 text-gray-200 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">
                         {svc.category}
                       </span>
                     </div>
@@ -128,16 +128,16 @@ export default function Services() {
                   </div>
 
                   <div className="p-4 flex flex-col flex-1">
-                    <h3 className="font-display text-base font-bold text-gray-900 mb-1.5">{svc.name}</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed flex-1">{svc.description}</p>
+                    <h3 className="font-display text-base font-bold text-white mb-1.5">{svc.name}</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed flex-1">{svc.description}</p>
 
-                    <div className="flex items-center justify-between pt-3 mt-3 border-t border-gray-100">
+                    <div className="flex items-center justify-between pt-3 mt-3 border-t border-gray-800">
                       <div>
-                        <span className="text-lg font-display font-bold text-gray-900">{formatPrice(svc.price)}</span>
+                        <span className="text-lg font-display font-bold text-white">{formatPrice(svc.price)}</span>
                       </div>
                       <button
                         onClick={() => setSelected(svc)}
-                        className="bg-black hover:bg-gray-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:-translate-y-0.5 inline-flex items-center gap-1.5"
+                        className="bg-white hover:bg-gray-200 text-black text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:-translate-y-0.5 inline-flex items-center gap-1.5"
                       >
                         Book Now
                         <FaArrowRight className="text-xs" />
@@ -152,10 +152,10 @@ export default function Services() {
 
         {!loading && filtered.length === 0 && (
           <div className="text-center py-10">
-            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center mx-auto mb-3">
               <FaSpa className="text-xl text-gray-400" />
             </div>
-            <h3 className="font-display text-lg font-bold text-gray-600 mb-1">No services found</h3>
+            <h3 className="font-display text-lg font-bold text-gray-300 mb-1">No services found</h3>
             <p className="text-gray-400 text-sm">Try selecting a different category</p>
           </div>
         )}
