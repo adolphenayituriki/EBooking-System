@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FaTimes, FaCalendarAlt, FaUser, FaPhone, FaEnvelope, FaClock, FaUsers, FaCheckCircle, FaArrowRight, FaArrowLeft, FaSpinner, FaBed, FaGlassCheers, FaSpa, FaUserCheck, FaRegCalendarCheck, FaCommentDots } from 'react-icons/fa';
+import { FaTimes, FaCalendarAlt, FaUser, FaPhone, FaEnvelope, FaClock, FaUsers, FaCheckCircle, FaArrowRight, FaArrowLeft, FaSpinner, FaBed, FaGlassCheers, FaSpa, FaUserCheck, FaRegCalendarCheck, FaCommentDots, FaPrint } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { createBooking } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -32,15 +32,16 @@ function FormField({ label, icon: Icon, error, children }) {
   );
 }
 
-export default function BookingModal({ item, type, onClose }) {
+export default function BookingModal({ item, type, onClose, initial }) {
   const { user } = useAuth();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [receipt, setReceipt] = useState(null);
   const [form, setForm] = useState({
     guestName: user?.name || '', email: user?.email || '', phone: user?.phone || '',
-    checkIn: '', checkOut: '', date: '', time: '',
-    guests: 1, specialRequests: '',
+    checkIn: initial?.checkIn || '', checkOut: initial?.checkOut || '', date: '', time: '',
+    guests: initial?.guests || 1, specialRequests: '',
   });
 
   const set = (key, val) => {

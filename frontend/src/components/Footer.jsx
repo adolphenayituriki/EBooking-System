@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHotel, FaPhone, FaEnvelope, FaMapMarkerAlt, FaFacebookF, FaInstagram, FaTwitter, FaArrowRight, FaPaperPlane, FaCheck, FaArrowUp } from 'react-icons/fa';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaFacebookF, FaInstagram, FaTwitter, FaArrowRight, FaPaperPlane, FaCheck, FaArrowUp } from 'react-icons/fa';
 
 const quickLinks = [
   { to: '/', label: 'Home' },
@@ -49,21 +49,19 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-8 mb-8">
           {/* Brand */}
-          <div className="lg:col-span-4">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="flex flex-col">
-                <span className="text-xl font-display font-bold tracking-[0.2em] leading-tight text-white">AKARABO</span>
-                <span className="text-[10px] font-medium tracking-[0.35em] uppercase text-gray-500">Hotel & Spa</span>
-              </div>
+          <div className="col-span-2 lg:col-span-4">
+            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-700 mb-4">
+              <img src="/Logo.png" alt="Akarabo Hotel & Spa" className="w-full h-full object-cover scale-125" />
             </div>
+            <div className="w-12 h-px bg-gray-800 mb-5" />
             <p className="text-gray-500 text-sm leading-relaxed max-w-xs mb-5">
               Where luxury meets comfort. Experience world-class hospitality, breathtaking views, and unforgettable moments.
             </p>
             <div className="flex gap-2.5">
               {[FaFacebookF, FaInstagram, FaTwitter].map((Icon, i) => (
-                <a key={i} href="#" className="w-8 h-8 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 hover:-translate-y-0.5">
+                <a key={i} href="#" className="w-8 h-8 border border-gray-700 hover:border-gray-500 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 hover:-translate-y-0.5">
                   <Icon className="text-[11px]" />
                 </a>
               ))}
@@ -72,7 +70,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Quick Links</h4>
+            <h4 className="text-[10px] font-semibold text-gray-300 uppercase tracking-wider mb-3">Quick Links</h4>
             <ul className="space-y-2">
               {quickLinks.map((item) => (
                 <li key={item.label}>
@@ -84,7 +82,7 @@ export default function Footer() {
 
           {/* Services */}
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Services</h4>
+            <h4 className="text-[10px] font-semibold text-gray-300 uppercase tracking-wider mb-3">Services</h4>
             <ul className="space-y-2">
               {services.map((item) => (
                 <li key={item.label}>
@@ -95,8 +93,8 @@ export default function Footer() {
           </div>
 
           {/* Contact + Newsletter */}
-          <div className="lg:col-span-4">
-            <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Contact Us</h4>
+          <div className="col-span-2 lg:col-span-4">
+            <h4 className="text-[10px] font-semibold text-gray-300 uppercase tracking-wider mb-3">Contact Us</h4>
             <div className="space-y-2 mb-5">
               {contactItems.map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-start gap-2.5 text-gray-500 text-sm">
@@ -106,7 +104,7 @@ export default function Footer() {
               ))}
             </div>
 
-            <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Stay Updated</h4>
+            <h4 className="text-[10px] font-semibold text-gray-300 uppercase tracking-wider mb-2">Stay Updated</h4>
             <p className="text-gray-500 text-[11px] mb-2">Get exclusive offers straight to your inbox.</p>
             <form onSubmit={handleSubscribe} className="flex gap-2">
               <input
@@ -126,11 +124,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-gray-800 pt-5 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div className="relative flex items-center justify-center">
           <p className="text-gray-500 text-[11px]">&copy; {new Date().getFullYear()} Akarabo Hotel & Spa. All rights reserved.</p>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="w-7 h-7 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 hover:-translate-y-0.5"
+            className="absolute right-0 w-7 h-7 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 hover:-translate-y-0.5"
             aria-label="Back to top"
           >
             <FaArrowUp className="text-[10px]" />

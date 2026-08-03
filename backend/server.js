@@ -15,6 +15,7 @@ app.use('/api/halls', require('./routes/halls'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/contact', require('./routes/contact'));
+app.use('/api/admin', require('./routes/admin'));
 
 app.get('/', (_, res) => res.send('Akarabo Hotel API running'));
 

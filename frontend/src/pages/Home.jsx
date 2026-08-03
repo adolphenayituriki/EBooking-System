@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FaUsers, FaUtensils, FaWater, FaDumbbell, FaBed, FaSwimmingPool, FaStar, FaArrowRight, FaWifi, FaConciergeBell, FaCar, FaChevronLeft, FaChevronRight, FaShieldAlt, FaHeadset, FaGem, FaArrowUp, FaPercent, FaCalendarAlt, FaUserFriends, FaCheck, FaSpa, FaHotel, FaMapMarkerAlt, FaQuoteLeft, FaPhoneAlt, FaEnvelope, FaClock, FaStarHalfAlt, FaRegCalendarCheck, FaAward, FaHandshake, FaImages, FaTimes } from 'react-icons/fa';
-import { getRooms } from '../services/api';
+import { FaUsers, FaUtensils, FaWater, FaDumbbell, FaBed, FaSwimmingPool, FaStar, FaArrowRight, FaWifi, FaConciergeBell, FaCar, FaChevronLeft, FaChevronRight, FaShieldAlt, FaHeadset, FaGem, FaArrowUp, FaPercent, FaCalendarAlt, FaUserFriends, FaCheck, FaSpa, FaHotel, FaMapMarkerAlt, FaQuoteLeft, FaPhoneAlt, FaEnvelope, FaClock, FaStarHalfAlt, FaRegCalendarCheck, FaAward, FaHandshake, FaImages, FaTimes, FaChevronDown, FaSpinner } from 'react-icons/fa';
+import { getRooms, getRoomAvailability } from '../services/api';
 import { formatPrice } from '../utils/format';
 import BookingModal from '../components/BookingModal';
 
@@ -75,6 +75,14 @@ const galleryImages = [
   { src: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&q=80', category: 'Events' },
 ];
 
+const heroSlides = [
+  'https://images.unsplash.com/photo-1687986261123-b17f08f2796c?w=1600&q=80',
+  'https://images.unsplash.com/photo-1682773083912-ff5ee5fa557b?w=1600&q=80',
+  'https://images.unsplash.com/photo-1605559911928-e03606ea0dc0?w=1600&q=80',
+  'https://images.unsplash.com/photo-1722291731448-3afe029611a6?w=1600&q=80',
+  'https://images.unsplash.com/photo-1758592112679-d73165845e06?w=1600&q=80',
+];
+
 const galleryCategories = ['All', 'Rooms', 'Pool', 'Dining', 'Spa', 'Exterior', 'Events'];
 
 function AnimatedCounter({ value }) {
@@ -122,10 +130,85 @@ export default function Home() {
   const [bookingRoom, setBookingRoom] = useState(null);
   const [galleryFilter, setGalleryFilter] = useState('All');
   const [search, setSearch] = useState({ checkIn: '', checkOut: '', guests: '1' });
+  const [searchResults, setSearchResults] = useState(null);
+  const [searchMeta, setSearchMeta] = useState({ searched: false, loading: false, error: '', checkIn: '', checkOut: '', guests: '1' });
+  const [bookingPrefill, setBookingPrefill] = useState(null);
+  const [bgIndex, setBgIndex] = useState(0);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [galleryVisible, setGalleryVisible] = useState(3);
+  const resultsRef = useRef(null);
 
-  const handleSearch = () => {
-    roomsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  useEffect(() => {
+    const timer = setInterval(() => setBgIndex((i) => (i + 1) % heroSlides.length), 6000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const filteredGallery = galleryImages.filter((img) => galleryFilter === 'All' || img.category === galleryFilter);
+  const galleryCount = filteredGallery.length;
+  const galleryMax = Math.max(0, galleryCount - galleryVisible);
+  const currentGallery = Math.min(galleryIndex, galleryMax);
+
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      setGalleryVisible(w < 640 ? 1 : w < 1024 ? 2 : 3);
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  useEffect(() => {
+    setGalleryIndex(0);
+  }, [galleryFilter]);
+
+  useEffect(() => {
+    if (galleryCount <= galleryVisible) return;
+    const timer = setInterval(() => {
+      setGalleryIndex((i) => (i >= galleryMax ? 0 : i + 1));
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [galleryCount, galleryVisible, galleryMax]);
+
+  const galleryPrev = () => setGalleryIndex((i) => (i <= 0 ? galleryMax : i - 1));
+  const galleryNext = () => setGalleryIndex((i) => (i >= galleryMax ? 0 : i + 1));
+
+  const fmtDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  const handleSearch = async () => {
+    const { checkIn, checkOut, guests } = search;
+    const invalid = !checkIn || !checkOut
+      ? 'Please select both check-in and check-out dates.'
+      : new Date(checkOut) <= new Date(checkIn)
+        ? 'Check-out must be after check-in.'
+        : '';
+    if (invalid) {
+      setSearchResults(null);
+      setSearchMeta({ searched: true, loading: false, error: invalid, checkIn, checkOut, guests });
+      return;
+    }
+    setSearchMeta({ searched: true, loading: true, error: '', checkIn, checkOut, guests });
+    try {
+      const available = await getRoomAvailability({ checkIn, checkOut, guests });
+      setSearchResults(available?.length ? available : []);
+    } catch {
+      const available = rooms.filter((r) => Number(r.capacity) >= Number(guests));
+      setSearchResults(available);
+    } finally {
+      setSearchMeta((m) => ({ ...m, loading: false }));
+      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
   };
+
+  const clearSearch = () => {
+    setSearch({ checkIn: '', checkOut: '', guests: '1' });
+    setSearchResults(null);
+    setSearchMeta((m) => ({ ...m, searched: false, error: '' }));
+  };
+
+  const nights = searchMeta.checkIn && searchMeta.checkOut
+    ? Math.max(1, Math.ceil((new Date(searchMeta.checkOut) - new Date(searchMeta.checkIn)) / 86400000))
+    : 1;
 
   useEffect(() => {
     getRooms()
@@ -170,10 +253,16 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden -mt-[124px] pt-[124px]">
+      <section className="relative min-h-[85vh] flex items-center overflow-hidden -mt-[104px] pt-[104px] md:-mt-[140px] md:pt-[140px]">
         <div className="absolute inset-0">
-          <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&q=80')] bg-cover bg-center animate-hero-zoom" />
-          <div className="absolute inset-0 bg-black" />
+          {heroSlides.map((src, i) => (
+            <div
+              key={src}
+              className={`absolute inset-0 bg-gray-900 bg-cover bg-center animate-hero-zoom transition-opacity duration-[2000ms] ease-in-out ${i === bgIndex ? 'opacity-100' : 'opacity-0'}`}
+              style={{ backgroundImage: `url('${src}')` }}
+            />
+          ))}
+          <div className="absolute inset-0 bg-black/60" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 pb-16 pt-0 w-full">
           <div className="grid lg:grid-cols-5 gap-10 items-center">
@@ -203,37 +292,38 @@ export default function Home() {
             </div>
 
             {/* Quick booking widget - glass effect */}
-            <div className="lg:col-span-2 hidden lg:block animate-in-delay-2">
+            <div className="lg:col-span-2 animate-in-delay-2">
               <div className="bg-gray-900 rounded-3xl p-7 border border-gray-700 shadow-2xl">
                 <h3 className="text-white font-display font-semibold text-base mb-5">Check Availability</h3>
-                <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-gray-400 text-xs font-medium block mb-1.5">Check-in</label>
                     <div className="relative">
-                      <FaCalendarAlt className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs" />
+                      <FaCalendarAlt className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs" />
                       <input type="date" value={search.checkIn} onChange={(e) => setSearch(s => ({ ...s, checkIn: e.target.value }))} className="w-full bg-gray-800 border border-gray-700 rounded-xl py-3 pl-10 pr-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition-all [color-scheme:dark]" />
                     </div>
                   </div>
                   <div>
                     <label className="text-gray-400 text-xs font-medium block mb-1.5">Check-out</label>
                     <div className="relative">
-                      <FaCalendarAlt className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs" />
+                      <FaCalendarAlt className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs" />
                       <input type="date" value={search.checkOut} onChange={(e) => setSearch(s => ({ ...s, checkOut: e.target.value }))} min={search.checkIn || undefined} className="w-full bg-gray-800 border border-gray-700 rounded-xl py-3 pl-10 pr-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition-all [color-scheme:dark]" />
                     </div>
                   </div>
                   <div>
                     <label className="text-gray-400 text-xs font-medium block mb-1.5">Guests</label>
                     <div className="relative">
-                      <FaUserFriends className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs" />
-                      <select value={search.guests} onChange={(e) => setSearch(s => ({ ...s, guests: e.target.value }))} className="w-full bg-gray-800 border border-gray-700 rounded-xl py-3 pl-10 pr-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition-all appearance-none">
-                        <option className="text-gray-800" value="1">1 Guest</option>
-                        <option className="text-gray-800" value="2">2 Guests</option>
-                        <option className="text-gray-800" value="3">3 Guests</option>
-                        <option className="text-gray-800" value="4">4+ Guests</option>
+                      <FaUserFriends className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs" />
+                      <select value={search.guests} onChange={(e) => setSearch(s => ({ ...s, guests: e.target.value }))} className="w-full bg-gray-800 border border-gray-700 rounded-xl py-3 pl-10 pr-8 text-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition-all appearance-none cursor-pointer">
+                        <option className="bg-gray-800 text-white" value="1">1 Guest</option>
+                        <option className="bg-gray-800 text-white" value="2">2 Guests</option>
+                        <option className="bg-gray-800 text-white" value="3">3 Guests</option>
+                        <option className="bg-gray-800 text-white" value="4">4+ Guests</option>
                       </select>
+                      <FaChevronDown className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs" />
                     </div>
                   </div>
-                  <button onClick={handleSearch} className="block w-full bg-white text-black text-center font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 text-sm">
+                  <button onClick={handleSearch} className="flex items-center justify-center w-full bg-white text-black text-center font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 text-sm">
                     Search Rooms
                   </button>
                 </div>
@@ -241,11 +331,98 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Slide indicators */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
+          {heroSlides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setBgIndex(i)}
+              aria-label={`Slide ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${i === bgIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/70'}`}
+            />
+          ))}
+        </div>
       </section>
+
+      {/* Search results */}
+      {searchMeta.searched && (
+        <section ref={resultsRef} className="py-10 bg-black border-t border-gray-800 scroll-mt-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-display font-bold text-white">Available Rooms</h2>
+                {searchMeta.error ? (
+                  <p className="text-sm text-red-400 mt-1">{searchMeta.error}</p>
+                ) : searchMeta.loading ? (
+                  <p className="text-sm text-gray-400 mt-1">Checking availability for your dates&hellip;</p>
+                ) : (
+                  <p className="text-sm text-gray-400 mt-1">
+                    {searchResults?.length || 0} room{searchResults?.length !== 1 ? 's' : ''} found for {searchMeta.guests} guest{Number(searchMeta.guests) > 1 ? 's' : ''} &middot; {fmtDate(searchMeta.checkIn)} &rarr; {fmtDate(searchMeta.checkOut)} ({nights} night{nights > 1 ? 's' : ''})
+                  </p>
+                )}
+              </div>
+              <button onClick={clearSearch} className="text-xs font-semibold text-gray-400 hover:text-white transition-colors">
+                &times; Clear search
+              </button>
+            </div>
+
+            {searchMeta.loading ? (
+              <div className="flex items-center justify-center gap-2 text-gray-400 text-sm py-16">
+                <FaSpinner className="animate-spin" /> Checking availability&hellip;
+              </div>
+            ) : searchMeta.error ? (
+              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-10 text-center">
+                <p className="text-white font-display font-semibold text-lg mb-2">We need more info</p>
+                <p className="text-gray-400 text-sm">Please pick check-in and check-out dates to see available rooms.</p>
+              </div>
+            ) : searchResults?.length === 0 ? (
+              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-10 text-center">
+                <p className="text-white font-display font-semibold text-lg mb-2">No rooms available</p>
+                <p className="text-gray-400 text-sm mb-5">No rooms match your dates and guest count. Try different dates or fewer guests.</p>
+                <Link to="/rooms" className="inline-flex items-center gap-2 bg-white text-black font-semibold px-5 py-2.5 rounded-xl text-sm transition-all hover:bg-gray-200">
+                  View all rooms <FaArrowRight className="text-[10px]" />
+                </Link>
+              </div>
+            ) : (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {searchResults.map((room, i) => (
+                  <div key={room._id} className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:bg-gray-800 transition-all duration-300 group">
+                    <div className="relative h-40 bg-gray-800 overflow-hidden">
+                      <img src={roomImages[i % roomImages.length]} alt={room.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                      <span className="absolute top-3 left-3 bg-gray-800 text-gray-200 text-[10px] font-semibold px-2 py-0.5 rounded-md">{room.type}</span>
+                      <span className="absolute top-3 right-3 flex items-center gap-1 bg-green-500/15 text-green-400 text-[10px] font-semibold px-2 py-0.5 rounded-md border border-green-500/30">
+                        <FaCheck className="text-[8px]" /> Available
+                      </span>
+                    </div>
+                    <div className="p-5">
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <h3 className="font-display font-bold text-white text-sm leading-tight">{room.name}</h3>
+                        <span className="flex items-center gap-1 text-[11px] text-gray-400 whitespace-nowrap"><FaUserFriends className="text-[10px]" /> {room.capacity}</span>
+                      </div>
+                      <p className="text-gray-400 text-[11px] mb-3 line-clamp-2 leading-relaxed">{room.description}</p>
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-800">
+                        <div>
+                          <span className="text-base font-display font-bold text-white">{formatPrice(room.price)}</span>
+                          <span className="text-gray-500 text-[10px]">/night</span>
+                        </div>
+                        <button onClick={() => { setBookingRoom(room); setBookingPrefill({ checkIn: searchMeta.checkIn, checkOut: searchMeta.checkOut, guests: Number(searchMeta.guests) }); }} className="bg-white text-black text-[11px] font-semibold px-4 py-2 rounded-lg transition-all hover:shadow-lg hover:-translate-y-0.5">
+                          Book Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Promo bar */}
       <section className="bg-black py-3 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-center gap-2.5 text-sm text-gray-300">
+        <div className="max-w-7xl mx-auto px-4 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-sm text-gray-300">
           <span>Book <strong className="text-white">7 days</strong> ahead & save</span>
           <span className="bg-gray-800 text-gray-300 font-bold px-2.5 py-0.5 rounded-md text-xs">20% OFF</span>
           <button onClick={() => roomsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="text-white font-semibold hover:text-gray-300 underline underline-offset-2 ml-1 transition-colors">
@@ -260,16 +437,14 @@ export default function Home() {
           <div className="text-center mb-8">
             <span className="text-gray-600 text-xs font-medium uppercase tracking-[0.2em]">Our Numbers</span>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {trustStats.map(({ icon: Icon, value, label, sub }, i) => (
-              <div key={label} className="relative bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-5 text-center hover:bg-gray-800 hover:border-gray-700 transition-all duration-500 group">
-                <div className="w-8 h-8 mx-auto mb-3 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center group-hover:bg-gray-700 transition-colors duration-300">
-                  <Icon className="text-gray-400 text-sm group-hover:text-gray-300 transition-colors duration-300" />
-                </div>
-                <p className="text-2xl lg:text-3xl font-display font-bold text-white mb-0.5 tracking-tight"><AnimatedCounter value={value} /></p>
-                <p className="text-gray-400 text-xs sm:text-sm font-semibold">{label}</p>
-                <div className="w-6 h-px bg-gray-800 mx-auto my-2" />
-                <p className="text-gray-600 text-[11px]">{sub}</p>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-8 lg:gap-0 lg:divide-x lg:divide-gray-800">
+            {trustStats.map(({ icon: Icon, value, label, sub }) => (
+              <div key={label} className="text-center lg:px-6">
+                <Icon className="text-gray-500 text-base mx-auto mb-3" />
+                <p className="text-3xl lg:text-4xl font-display font-bold text-white tracking-tight leading-none"><AnimatedCounter value={value} /></p>
+                <p className="text-gray-400 text-sm font-semibold mt-2">{label}</p>
+                <div className="w-6 h-px bg-gray-800 mx-auto my-2.5" />
+                <p className="text-gray-600 text-xs">{sub}</p>
               </div>
             ))}
           </div>
@@ -281,25 +456,24 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-5">
             {summaries.map(({ to, icon: Icon, title, desc, items }) => (
-              <Link
-                key={title}
-                to={to}
-                className="group bg-gray-900 border border-gray-800 rounded-2xl p-5 hover:bg-gray-800 transition-all duration-300"
-              >
-                <Icon className="text-xl text-gray-400 mb-3 group-hover:text-white transition-colors duration-300" />
-                <h3 className="text-lg font-display font-bold text-white mb-1.5">{title}</h3>
-                <p className="text-gray-400 text-sm mb-3 leading-relaxed">{desc}</p>
-                <ul className="space-y-1.5 mb-4">
-                  {items.map((item) => (
-                    <li key={item} className="flex items-center gap-3 text-sm text-gray-400">
-                      <span className="w-1.5 h-1.5 rounded-full bg-gray-600 flex-shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <span className="inline-flex items-center gap-2 text-sm font-semibold text-gray-300 group-hover:text-white transition-colors group-hover:gap-3">
-                  View All <FaArrowRight className="text-[11px]" />
-                </span>
+              <Link key={title} to={to} className="group block border border-gray-800 rounded-2xl p-6 hover:border-gray-600 transition-colors duration-300">
+                <div className="flex flex-col h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center group-hover:border-gray-500 transition-colors duration-300 shrink-0">
+                      <Icon className="text-gray-400 text-sm group-hover:text-white transition-colors duration-300" />
+                    </span>
+                    <h3 className="text-lg font-display font-bold text-white">{title}</h3>
+                  </div>
+                  <p className="text-gray-400 text-sm mb-4 leading-relaxed">{desc}</p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {items.map((item) => (
+                      <span key={item} className="text-[11px] text-gray-400 border border-gray-700 rounded-full px-3 py-1 group-hover:border-gray-600 transition-colors duration-300">{item}</span>
+                    ))}
+                  </div>
+                  <span className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-gray-300 group-hover:text-white transition-colors duration-300">
+                    View All <FaArrowRight className="text-[11px] group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
@@ -399,13 +573,33 @@ export default function Home() {
               </button>
             ))}
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            {galleryImages.filter((img) => galleryFilter === 'All' || img.category === galleryFilter).map((img, i) => (
-              <div key={i} className={`relative overflow-hidden rounded-xl group cursor-pointer ${i === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}>
-                <img src={img.src} alt={`Akarabo Hotel ${i + 1}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 min-h-[160px]" loading="lazy" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+          <div className="relative">
+            <div className="overflow-hidden rounded-2xl border border-gray-800">
+              <div className="flex transition-transform duration-500 ease-out -mx-2.5" style={{ transform: `translateX(-${currentGallery * (100 / galleryVisible)}%)` }}>
+                {filteredGallery.map((img, i) => (
+                  <div key={i} className="shrink-0 px-2.5" style={{ width: `${100 / galleryVisible}%` }}>
+                    <div className="relative h-52 sm:h-64 md:h-80 rounded-xl overflow-hidden border border-gray-800 group">
+                      <img src={img.src} alt={`Akarabo Hotel ${i + 1}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      <span className="absolute bottom-3 left-3 bg-black/60 border border-gray-700 text-gray-200 text-[10px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-sm">{img.category}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            <button onClick={galleryPrev} disabled={galleryCount <= galleryVisible} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-gray-900 hover:bg-gray-800 border border-gray-700 flex items-center justify-center text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg z-10" aria-label="Previous images">
+              <FaChevronLeft className="text-xs" />
+            </button>
+            <button onClick={galleryNext} disabled={galleryCount <= galleryVisible} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-10 h-10 rounded-full bg-gray-900 hover:bg-gray-800 border border-gray-700 flex items-center justify-center text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg z-10" aria-label="Next images">
+              <FaChevronRight className="text-xs" />
+            </button>
+
+            <div className="flex items-center justify-center gap-1.5 mt-5">
+              {Array.from({ length: galleryMax + 1 }).map((_, i) => (
+                <button key={i} onClick={() => setGalleryIndex(i)} aria-label={`Go to slide ${i + 1}`} className={`h-1.5 rounded-full transition-all duration-300 ${i === currentGallery ? 'w-6 bg-white' : 'w-1.5 bg-gray-700 hover:bg-gray-600'}`} />
+              ))}
+            </div>
           </div>
           <div className="text-center mt-6">
             <Link to="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-300 hover:text-white transition-colors hover:-translate-y-0.5 inline-block group">
@@ -418,30 +612,39 @@ export default function Home() {
       {/* Testimonials */}
       <section className="py-10 bg-black overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-          <div className="flex items-end justify-between">
+          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h2 className="text-2xl md:text-3xl font-display font-bold text-white">Testimonials</h2>
+              <span className="text-gray-600 text-xs font-medium uppercase tracking-[0.2em]">Guest Reviews</span>
+              <h2 className="text-2xl md:text-3xl font-display font-bold text-white mt-1">Testimonials</h2>
             </div>
-            <div className="hidden sm:flex items-center gap-2">
-              <button onClick={() => scrollTestimonial(-1)} disabled={testimonialScrollPos <= 0} className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:bg-gray-800 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Previous testimonial">
-                <FaChevronLeft className="text-[10px]" />
-              </button>
-              <button onClick={() => scrollTestimonial(1)} disabled={testimonialScrollPos >= testimonialMaxScroll - 1} className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:bg-gray-800 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Next testimonial">
-                <FaChevronRight className="text-[10px]" />
-              </button>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 border border-gray-800 rounded-full px-4 py-2">
+                <FaStar className="text-amber-400 text-sm" />
+                <span className="font-display font-bold text-white text-sm">4.9</span>
+                <span className="text-gray-500 text-xs">/ 5 &middot; 1,240+ reviews</span>
+              </div>
+              <div className="hidden sm:flex items-center gap-2">
+                <button onClick={() => scrollTestimonial(-1)} disabled={testimonialScrollPos <= 0} className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:bg-gray-800 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Previous testimonial">
+                  <FaChevronLeft className="text-[10px]" />
+                </button>
+                <button onClick={() => scrollTestimonial(1)} disabled={testimonialScrollPos >= testimonialMaxScroll - 1} className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:bg-gray-800 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Next testimonial">
+                  <FaChevronRight className="text-[10px]" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div ref={testimonialScrollRef} className="flex gap-4 overflow-x-auto px-4 sm:px-6 lg:px-8 pb-2 scroll-smooth scrollbar-hide">
+        <div ref={testimonialScrollRef} className="flex gap-5 overflow-x-auto px-4 sm:px-6 lg:px-8 pb-2 scroll-smooth scrollbar-hide">
           {testimonials.map(({ name, role, text, rating }) => (
-            <div key={name} className="min-w-[280px] sm:min-w-[320px] bg-gray-900 border border-gray-800 rounded-xl p-5 shrink-0 hover:bg-gray-800 transition-all duration-300">
-              <div className="flex gap-0.5 mb-3">
-                {[...Array(rating)].map((_, j) => <FaStar key={j} className="text-gray-400 text-[11px]" />)}
+            <div key={name} className="relative min-w-[300px] sm:min-w-[340px] bg-gray-900/40 border border-gray-800 rounded-2xl p-6 shrink-0 hover:border-gray-600 hover:-translate-y-1 transition-all duration-300 group">
+              <FaQuoteLeft className="absolute top-6 right-6 text-3xl text-gray-800 group-hover:text-gray-700 transition-colors" />
+              <div className="flex gap-0.5 mb-4">
+                {[...Array(rating)].map((_, j) => <FaStar key={j} className="text-amber-400 text-[11px]" />)}
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed mb-4 italic line-clamp-3">&ldquo;{text}&rdquo;</p>
-              <div className="flex items-center gap-3 pt-3 border-t border-gray-800">
-                <div className="w-9 h-9 bg-gray-700 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0">
+              <p className="text-gray-300 text-sm leading-relaxed mb-5">&ldquo;{text}&rdquo;</p>
+              <div className="flex items-center gap-3 pt-4 border-t border-gray-800">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 ring-1 ring-gray-700 flex items-center justify-center text-[11px] font-bold text-white shrink-0">
                   {name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
@@ -479,8 +682,8 @@ export default function Home() {
               <h3 className="text-white font-display font-semibold text-sm mb-1">Stay Updated</h3>
               <p className="text-gray-400 text-xs mb-3">Get exclusive offers straight to your inbox.</p>
               <div className="flex gap-2">
-                <input type="email" placeholder="your@email.com" className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-600" />
-                <button className="bg-white text-black hover:bg-gray-200 font-semibold px-3.5 py-2.5 rounded-xl transition-all text-sm whitespace-nowrap">Subscribe</button>
+                <input type="email" placeholder="your@email.com" className="flex-1 min-w-0 bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-600" />
+                <button className="bg-white text-black hover:bg-gray-200 font-semibold px-3 py-2 rounded-xl transition-all text-sm whitespace-nowrap shrink-0">Subscribe</button>
               </div>
               <p className="text-gray-600 text-[10px] mt-2">No spam. Unsubscribe anytime.</p>
             </div>
@@ -524,7 +727,7 @@ export default function Home() {
         </div>
       )}
 
-      {bookingRoom && <BookingModal item={bookingRoom} type="Room" onClose={() => setBookingRoom(null)} />}
+      {bookingRoom && <BookingModal item={bookingRoom} type="Room" onClose={() => { setBookingRoom(null); setBookingPrefill(null); }} initial={bookingPrefill} />}
 
       {/* Back to top */}
       <button

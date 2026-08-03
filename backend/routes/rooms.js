@@ -1,5 +1,35 @@
 const router = require('express').Router();
 const Room = require('../models/Room');
+const Booking = require('../models/Booking');
+
+router.get('/availability', async (req, res) => {
+  try {
+    const { checkIn, checkOut, guests } = req.query;
+    const filter = {};
+    if (guests) filter.capacity = { $gte: Number(guests) };
+
+    const [rooms, bookings] = await Promise.all([
+      Room.find(filter),
+      Booking.find({ bookingType: 'Room', status: { $ne: 'Cancelled' }, checkIn: { $exists: true }, checkOut: { $exists: true } }),
+    ]);
+
+    let available = rooms;
+    if (checkIn && checkOut) {
+      const inDate = new Date(checkIn);
+      const outDate = new Date(checkOut);
+      const overlaps = (aStart, aEnd, bStart, bEnd) => aStart < bEnd && bStart < aEnd;
+      available = rooms.filter((room) =>
+        !bookings.some((b) =>
+          String(b.itemId) === String(room._id) &&
+          overlaps(inDate, outDate, new Date(b.checkIn), new Date(b.checkOut))
+        )
+      );
+    }
+    res.json(available);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 router.get('/', async (req, res) => {
   try {

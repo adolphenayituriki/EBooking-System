@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import {
   FaClock, FaArrowRight, FaFilter,
-  FaSpa, FaUtensils, FaDumbbell, FaSwimmingPool, FaCar, FaTshirt,
+  FaSpa, FaUtensils, FaDumbbell, FaSwimmingPool,
 } from 'react-icons/fa';
 import { getServices } from '../services/api';
 import { formatPrice } from '../utils/format';
 import BookingModal from '../components/BookingModal';
+import Spinner from '../components/Spinner';
+import ItemModal from '../components/ItemModal';
 
 const categories = [
   { value: 'All', label: 'All Services', icon: FaFilter },
@@ -14,8 +16,6 @@ const categories = [
   { value: 'Dining', label: 'Dining', icon: FaUtensils },
   { value: 'Fitness', label: 'Fitness', icon: FaDumbbell },
   { value: 'Swimming', label: 'Swimming', icon: FaSwimmingPool },
-  { value: 'Transport', label: 'Transport', icon: FaCar },
-  { value: 'Laundry', label: 'Laundry', icon: FaTshirt },
 ];
 
 const categoryColors = {
@@ -23,27 +23,26 @@ const categoryColors = {
   Spa: { bg: 'bg-gray-100', text: 'text-gray-700', icon: 'text-gray-500', gradient: 'from-gray-700 to-gray-900', image: 'https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=600&q=80' },
   Dining: { bg: 'bg-gray-100', text: 'text-gray-700', icon: 'text-gray-500', gradient: 'from-gray-700 to-gray-900', image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80' },
   Fitness: { bg: 'bg-gray-100', text: 'text-gray-700', icon: 'text-gray-500', gradient: 'from-gray-700 to-gray-900', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80' },
-  Swimming: { bg: 'bg-gray-100', text: 'text-gray-700', icon: 'text-gray-500', gradient: 'from-gray-700 to-gray-900', image: 'https://images.unsplash.com/photo-1576013551627-0cc20b0db2ab?w=600&q=80' },
-  Transport: { bg: 'bg-gray-100', text: 'text-gray-700', icon: 'text-gray-500', gradient: 'from-gray-700 to-gray-900', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&q=80' },
-  Laundry: { bg: 'bg-gray-100', text: 'text-gray-700', icon: 'text-gray-500', gradient: 'from-gray-700 to-gray-900', image: 'https://images.unsplash.com/photo-1545173168-9f1fcc4e6e8a?w=600&q=80' },
+  Swimming: { bg: 'bg-gray-100', text: 'text-gray-700', icon: 'text-gray-500', gradient: 'from-gray-700 to-gray-900', image: 'https://images.unsplash.com/photo-1598605272254-16f0c0ecdfa5?w=600&q=80' },
   Other: { bg: 'bg-gray-100', text: 'text-gray-700', icon: 'text-gray-500', gradient: 'from-gray-700 to-gray-900', image: '' },
 };
 
 const defaultServices = [
-  { _id: '1', name: 'Swedish Massage', category: 'Massage', description: 'Full body relaxation massage with essential oils, inspired by Rwandan wellness traditions.', price: 60, duration: '60 min' },
-  { _id: '2', name: 'Deep Tissue Massage', category: 'Massage', description: 'Therapeutic massage targeting deep muscle tension, perfect after a day exploring Kigali.', price: 80, duration: '75 min' },
-  { _id: '3', name: 'Hot Stone Therapy', category: 'Massage', description: 'Heated stone massage using locally sourced volcanic stones for deep relaxation.', price: 90, duration: '90 min' },
-  { _id: '4', name: 'Full Body Spa Treatment', category: 'Spa', description: 'Complete spa experience with Rwandan coffee scrub, body wrap, and rejuvenating facial.', price: 120, duration: '120 min' },
-  { _id: '5', name: 'Facial Rejuvenation', category: 'Spa', description: 'Premium facial treatment using natural Rwandan ingredients for glowing skin.', price: 50, duration: '45 min' },
-  { _id: '6', name: 'Fine Dining Experience', category: 'Dining', description: '5-course meal featuring Rwandan cuisine at our rooftop restaurant overlooking Kigali.', price: 75, duration: '2 hours' },
-  { _id: '7', name: 'Personal Training', category: 'Fitness', description: 'One-on-one fitness session with expert trainer in our hillside-view gym.', price: 40, duration: '60 min' },
-  { _id: '8', name: 'Airport Transfer', category: 'Transport', description: 'Luxury sedan pickup or drop-off at Kigali International Airport.', price: 50, duration: 'One Way' },
+  { _id: '1', name: 'Swedish Massage', category: 'Massage', description: 'Full body relaxation massage with essential oils, inspired by Rwandan wellness traditions.', price: 60, duration: '60 min', image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&q=80' },
+  { _id: '2', name: 'Deep Tissue Massage', category: 'Massage', description: 'Therapeutic massage targeting deep muscle tension, perfect after a day exploring Kigali.', price: 80, duration: '75 min', image: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=600&q=80' },
+  { _id: '3', name: 'Hot Stone Therapy', category: 'Massage', description: 'Heated stone massage using locally sourced volcanic stones for deep relaxation.', price: 90, duration: '90 min', image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600&q=80' },
+  { _id: '4', name: 'Full Body Spa Treatment', category: 'Spa', description: 'Complete spa experience with Rwandan coffee scrub, body wrap, and rejuvenating facial.', price: 120, duration: '120 min', image: 'https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=600&q=80' },
+  { _id: '5', name: 'Facial Rejuvenation', category: 'Spa', description: 'Premium facial treatment using natural Rwandan ingredients for glowing skin.', price: 50, duration: '45 min', image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80' },
+  { _id: '6', name: 'Fine Dining Experience', category: 'Dining', description: '5-course meal featuring Rwandan cuisine at our rooftop restaurant overlooking Kigali.', price: 75, duration: '2 hours', image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80' },
+  { _id: '7', name: 'Personal Training', category: 'Fitness', description: 'One-on-one fitness session with an expert trainer in our hillside-view gym.', price: 40, duration: '60 min', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80' },
+  { _id: '8', name: 'Pool Access', category: 'Swimming', description: 'Full day access to our infinity pool overlooking the Kigali hills.', price: 15, duration: 'Full Day', image: 'https://images.unsplash.com/photo-1598605272254-16f0c0ecdfa5?w=600&q=80' },
 ];
 
 export default function Services() {
   const [services, setServices] = useState([]);
   const [filter, setFilter] = useState('All');
   const [selected, setSelected] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,7 +58,7 @@ export default function Services() {
     <>
       <section className="page-hero">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1600&q=80')] bg-cover bg-center animate-hero-zoom" />
+          <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1687986261123-b17f08f2796c?w=1600&q=80')] bg-cover bg-center animate-hero-zoom" />
           <div className="absolute inset-0 bg-black/70" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -73,16 +72,17 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map(({ value, label, icon: Icon }) => (
             <button
               key={value}
               onClick={() => setFilter(value)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   filter === value
-                    ? 'bg-gray-900 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:-translate-y-0.5'
+                    ? 'bg-black text-white shadow-md'
+                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300'
               }`}
             >
               <Icon className="text-xs" /> {label}
@@ -91,45 +91,37 @@ export default function Services() {
         </div>
 
         {loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="card animate-pulse">
-                <div className="h-36 bg-gray-200" />
-                <div className="p-4 space-y-3">
-                  <div className="h-4 bg-gray-200 rounded w-1/3" />
-                  <div className="h-5 bg-gray-200 rounded w-1/2" />
-                  <div className="h-4 bg-gray-100 rounded w-3/4" />
-                </div>
-              </div>
-            ))}
+          <div className="flex justify-center py-20">
+            <Spinner size="text-2xl" label="Loading services..." />
           </div>
         )}
 
         {!loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {filtered.map((svc, i) => {
               const colors = categoryColors[svc.category] || categoryColors.Other;
               return (
-                <div key={svc._id} className="card group flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
-                  <div className="h-36 bg-gray-200 relative overflow-hidden">
-                    {colors.image && (
+                <div key={svc._id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:border-gray-300 group transition-all duration-300 flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
+                  <div className="h-36 bg-gray-100 relative overflow-hidden cursor-pointer group" onClick={() => setPreview(svc)}>
+                    {(svc.image || colors.image) && (
                       <img
-                        src={colors.image}
+                        src={svc.image || colors.image}
                         alt={svc.category}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 relative"
                         loading="lazy"
                       />
                     )}
-                    <div className={`absolute inset-0 bg-gradient-to-t ${colors.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
+                    {(svc.image || colors.image) && <Spinner className="absolute inset-0" size="text-lg" />}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                     <div className="absolute top-3 left-3">
-                      <span className="badge bg-gray-100 text-gray-700">
+                      <span className="bg-white/90 text-gray-800 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">
                         {svc.category}
                       </span>
                     </div>
                     {svc.duration && (
                       <div className="absolute top-3 right-3">
-                        <span className="badge bg-gray-800 text-white">
-                          <FaClock className="text-[10px]" /> {svc.duration}
+                        <span className="flex items-center gap-1 bg-black/70 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md">
+                          <FaClock className="text-gray-300 text-[10px]" /> {svc.duration}
                         </span>
                       </div>
                     )}
@@ -145,7 +137,7 @@ export default function Services() {
                       </div>
                       <button
                         onClick={() => setSelected(svc)}
-                        className="btn-primary text-sm py-2 px-4"
+                        className="bg-black hover:bg-gray-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:-translate-y-0.5 inline-flex items-center gap-1.5"
                       >
                         Book Now
                         <FaArrowRight className="text-xs" />
@@ -167,9 +159,21 @@ export default function Services() {
             <p className="text-gray-400 text-sm">Try selecting a different category</p>
           </div>
         )}
+        </div>
       </section>
 
       {selected && <BookingModal item={selected} type="Service" onClose={() => setSelected(null)} />}
+
+      {preview && (
+        <ItemModal
+          item={preview}
+          image={preview.image || (categoryColors[preview.category] || categoryColors.Other).image}
+          meta={`${preview.category}${preview.duration ? ` · ${preview.duration}` : ''}`}
+          chips={preview.duration ? [preview.duration] : []}
+          onClose={() => setPreview(null)}
+          onBook={() => { setSelected(preview); setPreview(null); }}
+        />
+      )}
     </>
   );
 }

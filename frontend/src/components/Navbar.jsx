@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes, FaPhoneAlt, FaUser, FaSignOutAlt, FaCalendarCheck, FaChevronDown } from 'react-icons/fa';
+import { FaBars, FaTimes, FaPhoneAlt, FaUser, FaSignOutAlt, FaCalendarCheck, FaHome, FaBed, FaSpa, FaUsers, FaEnvelope, FaBell, FaRegCalendarCheck, FaPercent, FaTachometerAlt } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
 import MyBookings from './MyBookings';
@@ -13,6 +13,14 @@ const links = [
   { to: '/contact', label: 'Contact' },
 ];
 
+const linkIcons = {
+  '/': FaHome,
+  '/rooms': FaBed,
+  '/services': FaSpa,
+  '/halls': FaUsers,
+  '/contact': FaEnvelope,
+};
+
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -20,7 +28,14 @@ export default function Navbar() {
   const [showAuth, setShowAuth] = useState(false);
   const [showBookings, setShowBookings] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotifs, setShowNotifs] = useState(false);
+  const [notifs, setNotifs] = useState([
+    { id: 1, icon: FaRegCalendarCheck, title: 'Booking confirmed', desc: 'Your Deluxe Room stay is confirmed for this weekend.', time: '2m ago', read: false },
+    { id: 2, icon: FaPercent, title: 'Save 20% this weekend', desc: 'Book 7 days ahead and unlock exclusive rates.', time: '1h ago', read: false },
+    { id: 3, icon: FaSpa, title: 'Spa package available', desc: 'New couples massage package is now live.', time: '1d ago', read: true },
+  ]);
   const userMenuRef = useRef(null);
+  const notifRef = useRef(null);
   const { pathname } = useLocation();
 
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -34,6 +49,18 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [showUserMenu]);
 
+  useEffect(() => {
+    if (!showNotifs) return;
+    const handleClick = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) setShowNotifs(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showNotifs]);
+
+  const unread = notifs.filter((n) => !n.read).length;
+  const markAllRead = () => setNotifs((ps) => ps.map((n) => ({ ...n, read: true })));
+
   const isHome = pathname === '/';
 
   const handleBookNow = () => {
@@ -45,16 +72,9 @@ export default function Navbar() {
   const handleAuthDone = () => { setShowAuth(false); navigate('/rooms'); };
 
   const Logo = () => (
-    <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-      <div className="flex flex-col">
-        <span className={`text-xl font-display font-bold tracking-[0.2em] leading-tight ${
-          isHome ? 'text-white' : 'text-black'
-        }`}>
-          AKARABO
-        </span>
-        <span className="text-[10px] font-medium tracking-[0.35em] uppercase text-gray-400">
-          Hotel & Spa
-        </span>
+    <Link to="/" className="flex items-center shrink-0 group" aria-label="Akarabo Hotel & Spa">
+      <div className={`w-12 h-12 rounded-full overflow-hidden border-2 transition-colors ${isHome ? 'border-gray-600 group-hover:border-white' : 'border-gray-200 group-hover:border-black'}`}>
+        <img src="/Logo.png" alt="Akarabo Hotel & Spa" className="w-full h-full object-cover scale-125" />
       </div>
     </Link>
   );
@@ -85,71 +105,144 @@ export default function Navbar() {
     </div>
   );
 
-  const actions = (
-    <div className="flex items-center justify-end gap-2 w-[22%] shrink-0">
-      <a
-        href="tel:+250788123456"
-        className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all ${
-          isHome ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-500 hover:text-black hover:bg-gray-100'
-        }`}
-        aria-label="Call us"
+  const notifBtn = (
+    <div className="relative" ref={notifRef}>
+      <button
+        onClick={() => setShowNotifs(!showNotifs)}
+        className={`relative w-9 h-9 flex items-center justify-center rounded-xl transition-all border ${
+          isHome
+            ? 'text-gray-200 border-gray-600 bg-gray-800/60 hover:bg-gray-700 hover:text-white'
+            : 'text-gray-600 border-gray-300 bg-gray-50 hover:bg-gray-200 hover:text-black'
+        } ${showNotifs ? (isHome ? 'bg-gray-700' : 'bg-gray-200') : ''}`}
+        aria-label="Notifications"
       >
-        <FaPhoneAlt className="text-xs" />
-      </a>
+        <FaBell className="text-sm" />
+        {unread > 0 && (
+          <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+            {unread}
+          </span>
+        )}
+      </button>
 
-      {user ? (
-        <div className="relative" ref={userMenuRef}>
-          <button
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all ${
-              isHome ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-100'
-            } ${showUserMenu ? (isHome ? 'bg-gray-800' : 'bg-gray-100') : ''}`}
-          >
-            <div className="w-7 h-7 bg-black rounded-lg flex items-center justify-center">
-              <span className="text-[11px] font-bold text-white">
-                {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-              </span>
-            </div>
-            <span className="text-sm font-medium max-w-[100px] truncate hidden xl:block">{user.name}</span>
-            <FaChevronDown className={`text-[10px] transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
-          </button>
-
-          {showUserMenu && (
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-200 py-2 animate-scale-in overflow-hidden">
-              <div className="px-4 py-2.5 border-b border-gray-200 mb-1">
-                <p className="text-sm font-semibold text-black truncate">{user.name}</p>
-                <p className="text-xs text-gray-500 truncate">{user.email}</p>
-              </div>
-              <button
-                onClick={() => { setShowBookings(true); setShowUserMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                <FaCalendarCheck className="text-gray-500 text-xs" /> My Bookings
+      {showNotifs && (
+        <div className="absolute right-0 top-full mt-2 w-80 max-w-[85vw] bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden animate-scale-in">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+            <p className="text-sm font-semibold text-black">Notifications</p>
+            {unread > 0 && (
+              <button onClick={markAllRead} className="text-xs font-medium text-gray-500 hover:text-black transition-colors">
+                Mark all read
               </button>
-              <hr className="my-1 border-gray-200" />
-              <button
-                onClick={() => { logout(); setShowUserMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
-              >
-                <FaSignOutAlt className="text-xs" /> Sign Out
-              </button>
-            </div>
-          )}
+            )}
+          </div>
+          <div className="max-h-80 overflow-y-auto">
+            {notifs.length === 0 ? (
+              <p className="text-sm text-gray-500 text-center py-8">No notifications yet</p>
+            ) : (
+              notifs.map((n) => (
+                <div
+                  key={n.id}
+                  onClick={() => setNotifs((ps) => ps.map((x) => x.id === n.id ? { ...x, read: true } : x))}
+                  className={`w-full flex items-start gap-3 px-4 py-3 text-left transition-colors cursor-pointer border-b border-gray-100 last:border-0 ${
+                    n.read ? 'bg-white hover:bg-gray-50' : 'bg-gray-50/70 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className={`w-8 h-8 flex items-center justify-center rounded-lg shrink-0 ${
+                    n.read ? 'bg-gray-100 text-gray-400' : 'bg-black text-white'
+                  }`}>
+                    <n.icon className="text-xs" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-2">
+                      <span className={`text-sm ${n.read ? 'text-gray-500' : 'text-black font-semibold'}`}>{n.title}</span>
+                      {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />}
+                    </span>
+                    <span className="block text-xs text-gray-500 truncate">{n.desc}</span>
+                    <span className="block text-[10px] text-gray-400 mt-0.5">{n.time}</span>
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      ) : (
-        <button
-          onClick={() => setShowAuth(true)}
-          className={`px-3 py-2 text-sm font-medium rounded-xl transition-all ${
-            isHome ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-black hover:bg-gray-100'
-          }`}
-        >
-          <span className="whitespace-nowrap">Sign In</span>
-        </button>
       )}
+    </div>
+  );
 
+  const profileBtn = (compact) => user ? (
+    <div className="relative" ref={userMenuRef}>
+      <button
+        onClick={() => setShowUserMenu(!showUserMenu)}
+        className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all border ${
+          isHome
+            ? 'text-gray-200 border-gray-600 bg-gray-800/60 hover:bg-gray-700 hover:text-white'
+            : 'text-gray-600 border-gray-300 bg-gray-50 hover:bg-gray-200 hover:text-black'
+        } ${showUserMenu ? (isHome ? 'bg-gray-700' : 'bg-gray-200') : ''}`}
+        aria-label="Account"
+      >
+        <FaUser className="text-sm" />
+      </button>
+
+      {showUserMenu && (
+        <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-200 py-2 animate-scale-in overflow-hidden">
+          <div className="px-4 py-2.5 border-b border-gray-200 mb-1">
+            <p className="text-sm font-semibold text-black truncate">{user.name}</p>
+            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+          </div>
+          <button
+            onClick={() => { setShowBookings(true); setShowUserMenu(false); }}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+          >
+            <FaCalendarCheck className="text-gray-500 text-xs" /> My Bookings
+          </button>
+          {user.role === 'admin' && (
+            <Link
+              to="/admin"
+              onClick={() => setShowUserMenu(false)}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              <FaTachometerAlt className="text-gray-500 text-xs" /> Admin Dashboard
+            </Link>
+          )}
+          <hr className="my-1 border-gray-200" />
+          <button
+            onClick={() => { logout(); setShowUserMenu(false); navigate('/'); }}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
+          >
+            <FaSignOutAlt className="text-xs" /> Sign Out
+          </button>
+        </div>
+      )}
+    </div>
+  ) : compact ? (
+    <button
+      onClick={() => setShowAuth(true)}
+      className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all border ${
+        isHome
+          ? 'text-gray-200 border-gray-600 bg-gray-800/60 hover:bg-gray-700 hover:text-white'
+          : 'text-gray-600 border-gray-300 bg-gray-50 hover:bg-gray-200 hover:text-black'
+      }`}
+      aria-label="Sign in"
+    >
+      <FaUser className="text-sm" />
+    </button>
+  ) : (
+    <button
+      onClick={() => setShowAuth(true)}
+      className={`px-3 py-2 text-sm font-medium rounded-xl transition-all ${
+        isHome ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-black hover:bg-gray-100'
+      }`}
+    >
+      <span className="whitespace-nowrap">Sign In</span>
+    </button>
+  );
+
+  const actions = (
+    <div className="flex items-center justify-end gap-1.5 xl:gap-2 shrink-0">
+      {notifBtn}
+      {profileBtn(false)}
       <button
         onClick={handleBookNow}
-        className={`text-sm font-semibold py-2.5 px-5 rounded-2xl transition-all ${
+        className={`text-sm font-semibold py-2.5 px-4 xl:px-5 rounded-xl whitespace-nowrap transition-all ${
           isHome ? 'bg-white text-black' : 'bg-black text-white'
         }`}
       >
@@ -195,13 +288,17 @@ export default function Navbar() {
                 </div>
                 <div className="flex lg:hidden items-center justify-between w-full">
                   <Logo />
-                  <button
-                    onClick={() => setOpen(!open)}
-                    className="relative z-50 w-10 h-10 flex items-center justify-center rounded-xl text-gray-400"
-                    aria-label={open ? 'Close menu' : 'Open menu'}
-                  >
-                    {open ? <FaTimes className="text-lg" /> : <FaBars className="text-lg" />}
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    {profileBtn(true)}
+                    {notifBtn}
+                    <button
+                      onClick={() => setOpen(!open)}
+                      className="relative z-50 w-10 h-10 flex items-center justify-center rounded-xl text-gray-400"
+                      aria-label={open ? 'Close menu' : 'Open menu'}
+                    >
+                      {open ? <FaTimes className="text-lg" /> : <FaBars className="text-lg" />}
+                    </button>
+                  </div>
                 </div>
               </div>
             </nav>
@@ -217,13 +314,17 @@ export default function Navbar() {
               </div>
               <div className="flex lg:hidden items-center justify-between w-full">
                 <Logo />
-                <button
-                  onClick={() => setOpen(!open)}
-                  className="relative z-50 w-10 h-10 flex items-center justify-center rounded-xl text-gray-500"
-                  aria-label={open ? 'Close menu' : 'Open menu'}
-                >
-                  {open ? <FaTimes className="text-lg" /> : <FaBars className="text-lg" />}
-                </button>
+                <div className="flex items-center gap-1.5">
+                  {profileBtn(true)}
+                  {notifBtn}
+                  <button
+                    onClick={() => setOpen(!open)}
+                    className="relative z-50 w-10 h-10 flex items-center justify-center rounded-xl text-gray-500"
+                    aria-label={open ? 'Close menu' : 'Open menu'}
+                  >
+                    {open ? <FaTimes className="text-lg" /> : <FaBars className="text-lg" />}
+                  </button>
+                </div>
               </div>
             </div>
           </nav>
@@ -231,7 +332,7 @@ export default function Navbar() {
       </div>
 
       {/* Placeholder for fixed header */}
-      <div className={isHome ? 'h-[calc(36px+20px+68px)]' : 'h-[68px]'} />
+      <div className={isHome ? 'h-[104px] md:h-[140px]' : 'h-[72px] lg:h-[76px]'} />
 
       {/* Mobile overlay */}
       {open && (
@@ -242,21 +343,27 @@ export default function Navbar() {
       )}
 
       {/* Mobile drawer */}
-      <div className={`lg:hidden fixed top-0 right-0 z-40 h-full w-[280px] max-w-[85vw] transition-transform duration-300 ease-out ${
+      <div className={`lg:hidden fixed top-0 right-0 z-50 h-full w-[320px] max-w-[85vw] transition-transform duration-300 ease-out ${
         open ? 'translate-x-0' : 'translate-x-full'
-      } bg-white`}>
-        <div className="flex flex-col h-full pt-20 pb-6 px-5">
+      } bg-white flex flex-col shadow-2xl`}>
+        {/* Drawer header */}
+        <div className="flex items-center justify-between px-5 h-[76px] shrink-0 border-b border-gray-200">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 shrink-0">
+            <img src="/Logo.png" alt="Akarabo Hotel & Spa" className="w-full h-full object-cover scale-125" />
+          </div>
           <button
             onClick={() => setOpen(false)}
-            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
             aria-label="Close menu"
           >
             <FaTimes />
           </button>
+        </div>
 
+        <div className="flex flex-col flex-1 min-h-0 overflow-y-auto px-5 pb-6 pt-2">
           {user && (
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
-              <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3 mb-5 p-3 rounded-2xl bg-gray-50 border border-gray-200">
+              <div className="w-11 h-11 bg-black rounded-2xl flex items-center justify-center shrink-0">
                 <span className="text-sm font-bold text-white">
                   {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                 </span>
@@ -268,38 +375,54 @@ export default function Navbar() {
             </div>
           )}
 
-          <nav className="flex-1 space-y-1">
+          <nav className="flex-1 space-y-1.5">
             {links.map((l, i) => {
+              const Icon = linkIcons[l.to];
               const isActive = pathname === l.to;
               return (
                 <Link
                   key={l.to}
                   to={l.to}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                     isActive
                       ? 'text-black bg-gray-100'
                       : 'text-gray-600 hover:text-black hover:bg-gray-100'
                   }`}
                   style={{ transitionDelay: `${i * 30}ms` }}
                 >
+                  <span className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${
+                    isActive ? 'bg-black text-white' : 'bg-gray-100 text-gray-500'
+                  }`}>
+                    <Icon className="text-[13px]" />
+                  </span>
                   {l.label}
+                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-black" />}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="pt-4 border-t border-gray-200 space-y-2">
+          <div className="pt-4 border-t border-gray-200 space-y-2 mt-4">
             {user ? (
               <>
                 <button
                   onClick={() => { setShowBookings(true); setOpen(false); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
                 >
                   <FaCalendarCheck className="text-gray-500 text-xs" /> My Bookings
                 </button>
+                {user.role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setOpen(false)}
+                    className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                  >
+                    <FaTachometerAlt className="text-gray-500 text-xs" /> Admin Dashboard
+                  </Link>
+                )}
                 <button
-                  onClick={() => { logout(); setOpen(false); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-100 transition-colors"
+                  onClick={() => { logout(); setOpen(false); navigate('/'); }}
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-100 transition-colors"
                 >
                   <FaSignOutAlt className="text-xs" /> Sign Out
                 </button>
@@ -307,14 +430,14 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={() => { setShowAuth(true); setOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
               >
                 <FaUser className="text-xs" /> Sign In
               </button>
             )}
             <button
               onClick={handleBookNow}
-              className="w-full py-3 rounded-xl text-sm font-semibold bg-black text-white shadow-lg transition-all hover:-translate-y-0.5 mt-2 whitespace-nowrap"
+              className="w-full py-3 rounded-xl text-sm font-semibold bg-black text-white shadow-lg transition-all hover:-translate-y-0.5 active:translate-y-0 mt-2 whitespace-nowrap"
             >
               Book Your Stay &rarr;
             </button>

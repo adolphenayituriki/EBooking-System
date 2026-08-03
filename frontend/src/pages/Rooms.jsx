@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { FaBed, FaUsers, FaWifi, FaCheckCircle, FaStar, FaFilter } from 'react-icons/fa';
+import { FaBed, FaUsers, FaStar, FaFilter } from 'react-icons/fa';
 import { getRooms } from '../services/api';
 import { formatPrice } from '../utils/format';
 import BookingModal from '../components/BookingModal';
+import Spinner from '../components/Spinner';
+import ItemModal from '../components/ItemModal';
 
 const types = ['All', 'Single', 'Double', 'Suite', 'Deluxe', 'Presidential'];
 
@@ -26,6 +28,7 @@ export default function Rooms() {
   const [rooms, setRooms] = useState([]);
   const [filter, setFilter] = useState('All');
   const [selected, setSelected] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,17 +58,18 @@ export default function Rooms() {
         </div>
       </section>
 
-      <section className="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+      <section className="py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
           <FaFilter className="text-gray-400 shrink-0" />
           {types.map((t) => (
             <button
               key={t}
               onClick={() => setFilter(t)}
-              className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   filter === t
-                    ? 'bg-gray-900 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:-translate-y-0.5'
+                    ? 'bg-black text-white shadow-md'
+                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300'
                 }`}
             >
               {t}
@@ -75,77 +79,64 @@ export default function Rooms() {
         </div>
 
         {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="card animate-pulse">
-                <div className="h-48 bg-gray-200" />
-                <div className="p-4 space-y-3">
-                  <div className="h-5 bg-gray-200 rounded w-1/2" />
-                  <div className="h-4 bg-gray-100 rounded w-3/4" />
-                  <div className="h-4 bg-gray-100 rounded w-2/3" />
-                </div>
-              </div>
-            ))}
+          <div className="flex justify-center py-20">
+            <Spinner size="text-2xl" label="Loading rooms..." />
           </div>
         )}
 
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((room, i) => (
-              <div key={room._id} className="card group flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
-                <div className="h-48 bg-gray-200 relative overflow-hidden">
+              <div key={room._id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:border-gray-300 group transition-all duration-300 flex flex-col" style={{ animationDelay: `${i * 0.05}s` }}>
+                <div className="h-40 bg-gray-100 relative overflow-hidden cursor-pointer group" onClick={() => setPreview(room)}>
                   <img
                     src={roomImages[room.type] || roomImages.Single}
                     alt={room.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 relative"
                     loading="lazy"
                   />
+                  <Spinner className="absolute inset-0" size="text-xl" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                  <div className="absolute top-3 left-3">
-                    <span className="badge bg-gray-100 text-gray-700">{room.type}</span>
+                  <div className="absolute top-2.5 left-2.5">
+                    <span className="bg-white/90 text-gray-800 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">{room.type}</span>
                   </div>
                   {room.type === 'Presidential' && (
-                    <div className="absolute top-3 right-3">
-                      <span className="badge bg-gray-800 text-white">
-                        <FaStar className="text-white text-[10px]" /> Premium
+                    <div className="absolute top-2.5 right-2.5">
+                      <span className="flex items-center gap-1 bg-black/70 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md">
+                        <FaStar className="text-amber-400 text-[10px]" /> Premium
                       </span>
                     </div>
                   )}
                 </div>
 
                 <div className="p-4 flex flex-col flex-1">
-                  <h3 className="font-display text-lg font-bold text-gray-900 mb-1">{room.name}</h3>
-                  <p className="text-gray-500 text-sm mb-3 leading-relaxed flex-1">{room.description}</p>
+                  <h3 className="font-display text-base font-bold text-gray-900 mb-1 leading-tight">{room.name}</h3>
+                  <p className="text-gray-500 text-[13px] mb-2.5 leading-relaxed flex-1">{room.description}</p>
 
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                    <span className="flex items-center gap-1.5">
-                      <FaUsers className="text-gray-500" /> {room.capacity} {room.capacity === 1 ? 'Guest' : 'Guests'}
+                  <div className="flex items-center gap-3 text-xs text-gray-500 mb-2.5">
+                    <span className="flex items-center gap-1">
+                      <FaUsers className="text-gray-400 text-[11px]" /> {room.capacity} {room.capacity === 1 ? 'Guest' : 'Guests'}
                     </span>
-                    <span className="flex items-center gap-1.5">
-                      <FaWifi className="text-gray-500" /> WiFi
-                    </span>
-                    <span className="flex items-center gap-1.5 text-gray-400">
+                    <span className="flex items-center gap-1 text-gray-400">
                       Floor {room.floor || '-'}
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap gap-1.5 mb-3">
+                  <div className="flex flex-wrap gap-1 mb-3">
                     {room.amenities?.slice(0, 4).map((a) => (
-                      <span key={a} className="badge bg-gray-100 text-gray-700 border border-gray-200">
-                        <FaCheckCircle className="text-gray-500 text-[10px]" /> {a}
-                      </span>
+                      <span key={a} className="text-[10px] bg-gray-50 text-gray-600 px-1.5 py-0.5 rounded-md border border-gray-200">{a}</span>
                     ))}
                     {room.amenities?.length > 4 && (
-                      <span className="badge bg-gray-100 text-gray-500">+{room.amenities.length - 4}</span>
+                      <span className="text-[10px] bg-gray-50 text-gray-400 px-1.5 py-0.5 rounded-md border border-gray-200">+{room.amenities.length - 4}</span>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-auto">
+                  <div className="flex items-center justify-between pt-2.5 border-t border-gray-100 mt-auto">
                     <div>
-                      <span className="text-xl font-display font-bold text-gray-900">{formatPrice(room.price)}</span>
-                      <span className="text-gray-400 text-sm"> / night</span>
+                      <span className="text-lg font-display font-bold text-gray-900">{formatPrice(room.price)}</span>
+                      <span className="text-gray-400 text-xs"> / night</span>
                     </div>
-                    <button onClick={() => setSelected(room)} className="btn-primary text-sm py-2 px-4">
+                    <button onClick={() => setSelected(room)} className="bg-black hover:bg-gray-800 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-all hover:-translate-y-0.5">
                       Book Now
                     </button>
                   </div>
@@ -164,9 +155,22 @@ export default function Rooms() {
             <p className="text-gray-400 text-sm">Try selecting a different category</p>
           </div>
         )}
+        </div>
       </section>
 
       {selected && <BookingModal item={selected} type="Room" onClose={() => setSelected(null)} />}
+
+      {preview && (
+        <ItemModal
+          item={preview}
+          image={roomImages[preview.type] || roomImages.Single}
+          meta={`${preview.type} · Floor ${preview.floor || '-'}`}
+          chips={preview.amenities || []}
+          priceSuffix="/ night"
+          onClose={() => setPreview(null)}
+          onBook={() => { setSelected(preview); setPreview(null); }}
+        />
+      )}
     </>
   );
 }

@@ -13,26 +13,22 @@ const rooms = [
 ];
 
 const services = [
-  { name: 'Swedish Massage', category: 'Massage', description: 'Full body relaxation massage with essential oils.', price: 60, duration: '60 min' },
-  { name: 'Deep Tissue Massage', category: 'Massage', description: 'Therapeutic massage targeting deep muscle tension.', price: 80, duration: '75 min' },
-  { name: 'Hot Stone Therapy', category: 'Massage', description: 'Heated stone massage for ultimate relaxation.', price: 90, duration: '90 min' },
-  { name: 'Couples Massage', category: 'Massage', description: 'Relax together with our signature couples treatment.', price: 140, duration: '60 min' },
-  { name: 'Full Body Spa Treatment', category: 'Spa', description: 'Complete spa experience with scrub, wrap, and facial.', price: 120, duration: '120 min' },
-  { name: 'Facial Rejuvenation', category: 'Spa', description: 'Premium facial treatment for glowing skin.', price: 50, duration: '45 min' },
-  { name: 'Fine Dining Experience', category: 'Dining', description: '5-course meal at our rooftop restaurant.', price: 75, duration: '2 hours' },
-  { name: 'Poolside Bar', category: 'Dining', description: 'Refreshing cocktails and light bites by the pool.', price: 20, duration: 'Open' },
-  { name: 'Personal Training', category: 'Fitness', description: 'One-on-one fitness session with expert trainer.', price: 40, duration: '60 min' },
-  { name: 'Pool Access', category: 'Swimming', description: 'Full day access to our infinity pool.', price: 15, duration: 'Full Day' },
-  { name: 'Airport Transfer', category: 'Transport', description: 'Luxury sedan airport pickup/drop-off.', price: 50, duration: 'One Way' },
-  { name: 'Express Laundry', category: 'Laundry', description: 'Same-day laundry and dry cleaning service.', price: 25, duration: '4 hours' },
+  { name: 'Swedish Massage', category: 'Massage', description: 'Full body relaxation massage with essential oils, inspired by Rwandan wellness traditions.', price: 60, duration: '60 min', image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&q=80' },
+  { name: 'Deep Tissue Massage', category: 'Massage', description: 'Therapeutic massage targeting deep muscle tension, perfect after a day exploring Kigali.', price: 80, duration: '75 min', image: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=600&q=80' },
+  { name: 'Hot Stone Therapy', category: 'Massage', description: 'Heated stone massage using locally sourced volcanic stones for deep relaxation.', price: 90, duration: '90 min', image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600&q=80' },
+  { name: 'Full Body Spa Treatment', category: 'Spa', description: 'Complete spa experience with Rwandan coffee scrub, body wrap, and rejuvenating facial.', price: 120, duration: '120 min', image: 'https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=600&q=80' },
+  { name: 'Facial Rejuvenation', category: 'Spa', description: 'Premium facial treatment using natural Rwandan ingredients for glowing skin.', price: 50, duration: '45 min', image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80' },
+  { name: 'Fine Dining Experience', category: 'Dining', description: '5-course meal featuring Rwandan cuisine at our rooftop restaurant overlooking Kigali.', price: 75, duration: '2 hours', image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80' },
+  { name: 'Personal Training', category: 'Fitness', description: 'One-on-one fitness session with an expert trainer in our hillside-view gym.', price: 40, duration: '60 min', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80' },
+  { name: 'Pool Access', category: 'Swimming', description: 'Full day access to our infinity pool overlooking the Kigali hills.', price: 15, duration: 'Full Day', image: 'https://images.unsplash.com/photo-1598605272254-16f0c0ecdfa5?w=600&q=80' },
 ];
 
 const halls = [
-  { name: 'Victory Conference Hall', type: 'Conference', capacity: 100, price: 500, description: 'State-of-the-art conference hall with projector and sound system.', amenities: ['Projector', 'Sound System', 'WiFi', 'Whiteboard', 'Mic'] },
-  { name: 'Golden Garden', type: 'Wedding', capacity: 200, price: 1500, description: 'Beautiful outdoor garden venue for dream weddings.', amenities: ['Stage', 'Lighting', 'Sound System', 'Parking', 'Bridal Suite'] },
-  { name: 'Royal Banquet Hall', type: 'Banquet', capacity: 150, price: 800, description: 'Elegant indoor banquet hall for grand celebrations.', amenities: ['Stage', 'Lighting', 'Sound System', 'Kitchen Access', 'Parking'] },
-  { name: 'Executive Meeting Room', type: 'Meeting', capacity: 20, price: 150, description: 'Intimate meeting room for corporate discussions.', amenities: ['Projector', 'WiFi', 'Whiteboard', 'Coffee Service'] },
-  { name: 'Sunset Terrace', type: 'Garden', capacity: 80, price: 600, description: 'Open-air terrace with stunning sunset views.', amenities: ['Lighting', 'Sound System', 'Bar Service', 'Parking'] },
+  { name: 'Victory Conference Hall', type: 'Conference', capacity: 100, price: 500, description: 'State-of-the-art conference hall with projector and sound system.', amenities: ['Projector', 'Sound System', 'WiFi', 'Whiteboard', 'Mic'], images: ['https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&q=80'] },
+  { name: 'Golden Garden', type: 'Wedding', capacity: 200, price: 1500, description: 'Beautiful outdoor garden venue for dream weddings.', amenities: ['Stage', 'Lighting', 'Sound System', 'Parking', 'Bridal Suite'], images: ['https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600&q=80'] },
+  { name: 'Royal Banquet Hall', type: 'Banquet', capacity: 150, price: 800, description: 'Elegant indoor banquet hall for grand celebrations.', amenities: ['Stage', 'Lighting', 'Sound System', 'Kitchen Access', 'Parking'], images: ['https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80'] },
+  { name: 'Executive Meeting Room', type: 'Meeting', capacity: 20, price: 150, description: 'Intimate meeting room for corporate discussions.', amenities: ['Projector', 'WiFi', 'Whiteboard', 'Coffee Service'], images: ['https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=600&q=80'] },
+  { name: 'Sunset Terrace', type: 'Garden', capacity: 80, price: 600, description: 'Open-air terrace overlooking Kigali with stunning sunset views.', amenities: ['Lighting', 'Sound System', 'Bar Service', 'Parking'], images: ['https://images.unsplash.com/photo-1526047932273-34113c170e08?w=600&q=80'] },
 ];
 
 const seedDB = async () => {
