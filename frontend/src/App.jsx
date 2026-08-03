@@ -78,7 +78,7 @@ export default function App() {
           toastStyle={{
             borderRadius: '12px',
             padding: '12px 16px',
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: 'Inter, system-ui, sans-serif',
             boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
           }}
           progressStyle={{
