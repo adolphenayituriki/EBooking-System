@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes, FaPhoneAlt, FaUser, FaSignOutAlt, FaCalendarCheck, FaHome, FaBed, FaSpa, FaUsers, FaEnvelope, FaBell, FaRegCalendarCheck, FaPercent, FaTachometerAlt } from 'react-icons/fa';
+import { FaBars, FaTimes, FaPhoneAlt, FaUser, FaSignOutAlt, FaCalendarCheck, FaHome, FaBed, FaSpa, FaUsers, FaEnvelope, FaBell, FaRegCalendarCheck, FaPercent, FaTachometerAlt, FaClock, FaCheckCircle, FaTimesCircle, FaCalendarAlt } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { getBookings } from '../services/api';
+import { formatPrice } from '../utils/format';
 import AuthModal from './AuthModal';
 import MyBookings from './MyBookings';
 
@@ -29,11 +31,7 @@ export default function Navbar() {
   const [showBookings, setShowBookings] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
-  const [notifs, setNotifs] = useState([
-    { id: 1, icon: FaRegCalendarCheck, title: 'Booking confirmed', desc: 'Your Deluxe Room stay is confirmed for this weekend.', time: '2m ago', read: false },
-    { id: 2, icon: FaPercent, title: 'Save 20% this weekend', desc: 'Book 7 days ahead and unlock exclusive rates.', time: '1h ago', read: false },
-    { id: 3, icon: FaSpa, title: 'Spa package available', desc: 'New couples massage package is now live.', time: '1d ago', read: true },
-  ]);
+  const [notifs, setNotifs] = useState([]);
   const userMenuRefDesktop = useRef(null);
   const userMenuRefMobile = useRef(null);
   const notifRefDesktop = useRef(null);
@@ -70,6 +68,65 @@ export default function Navbar() {
   const markAllRead = () => setNotifs((ps) => ps.map((n) => ({ ...n, read: true })));
 
   const isHome = pathname === '/';
+
+  const relTime = (d) => {
+    if (!d) return 'just now';
+    const min = Math.floor((Date.now() - new Date(d).getTime()) / 60000);
+    if (min < 1) return 'just now';
+    if (min < 60) return `${min}m ago`;
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return `${hr}h ago`;
+    const day = Math.floor(hr / 24);
+    if (day < 7) return `${day}d ago`;
+    return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  const promoNotifs = () => [
+    { id: 'promo-1', icon: FaPercent, title: 'Save 20% this weekend', desc: 'Book 7 days ahead and unlock exclusive rates.', time: '2h ago', ts: Date.now() - 2 * 3600000, read: false },
+    { id: 'promo-2', icon: FaSpa, title: 'Spa offer', desc: 'Enjoy a complimentary welcome drink with every massage this month.', time: '1d ago', ts: Date.now() - 26 * 3600000, read: true },
+  ];
+
+  useEffect(() => {
+    if (!user?.email) {
+      setNotifs(promoNotifs());
+      return;
+    }
+    getBookings(user.email)
+      .then((bookings) => {
+        const list = [];
+        (bookings || []).forEach((b) => {
+          const item = b?.itemId?.name || 'your booking';
+          const ts = Date.parse(b?.updatedAt || b?.createdAt) || Date.now();
+          const time = relTime(b?.updatedAt || b?.createdAt);
+          if (b.status === 'Confirmed') {
+            list.push({ id: `b${b._id}-c`, icon: FaRegCalendarCheck, title: 'Booking confirmed', desc: `${item} — ${formatPrice(b.totalPrice)}`, time, ts, read: false });
+          } else if (b.status === 'Pending') {
+            list.push({ id: `b${b._id}-p`, icon: FaClock, title: 'Booking pending', desc: `We are confirming your ${item} booking.`, time, ts, read: false });
+          } else if (b.status === 'Cancelled') {
+            list.push({ id: `b${b._id}-x`, icon: FaTimesCircle, title: 'Booking cancelled', desc: `Your ${item} booking was cancelled.`, time, ts, read: false });
+          } else if (b.status === 'Completed') {
+            list.push({ id: `b${b._id}-d`, icon: FaCheckCircle, title: 'Stay completed', desc: `Thank you for staying with us at ${item}.`, time, ts, read: false });
+          }
+          if (b.bookingType === 'Room' && b.checkIn) {
+            const days = Math.ceil((new Date(b.checkIn) - new Date()) / 86400000);
+            if (days >= 0 && days <= 2) {
+              list.push({
+                id: `b${b._id}-in`,
+                icon: FaCalendarAlt,
+                title: days === 0 ? 'Check-in today' : 'Check-in soon',
+                desc: `Your stay at ${item} starts ${days === 0 ? 'today' : `in ${days} day${days > 1 ? 's' : ''}`}.`,
+                time,
+                ts: ts + 1,
+                read: false,
+              });
+            }
+          }
+        });
+        list.sort((a, b2) => b2.ts - a.ts);
+        setNotifs([...list, ...promoNotifs()]);
+      })
+      .catch(() => setNotifs(promoNotifs()));
+  }, [user]);
 
   const handleBookNow = () => {
     setOpen(false);
