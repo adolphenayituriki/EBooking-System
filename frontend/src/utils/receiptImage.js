@@ -20,11 +20,22 @@ export const bookingQrValue = (b) => [
   `Status: ${b?.status || ''}`,
 ].join('\n');
 
-const FONT = '"Segoe UI", "Helvetica Neue", Arial, sans-serif';
+const FONT = '"Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif';
 const INK = '#111827';
 const GRAY = '#6b7280';
 const LIGHT = '#f3f4f6';
 const BORDER = '#e5e7eb';
+
+const loadFonts = async () => {
+  try {
+    await Promise.race([
+      Promise.all([400, 600, 700].map((w) => document.fonts.load(`${w} 16px Inter`))),
+      new Promise((r) => setTimeout(r, 3000)),
+    ]);
+  } catch {
+    // fall back to system fonts
+  }
+};
 
 const loadImage = (src) => new Promise((resolve) => {
   const img = new Image();
@@ -79,6 +90,8 @@ export async function renderReceiptImage(b) {
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext('2d');
+
+  await loadFonts();
 
   const [logo, qrImg] = await Promise.all([
     loadImage('/Logo.png'),
