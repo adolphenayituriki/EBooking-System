@@ -1,13 +1,27 @@
 const API = '/api';
 
+const NETWORK_ERROR = 'Unable to connect to the server. Please check your internet connection and try again.';
+
+const friendly = (msg) => {
+  const m = String(msg || '').trim();
+  if (!m || /Request failed/.test(m)) return 'Something went wrong. Please try again.';
+  if (/Failed to fetch|NetworkError|network error|ECONNREFUSED|timed out|timeout/i.test(m)) return NETWORK_ERROR;
+  return m;
+};
+
 const fetch_ = async (url, opts = {}) => {
   const headers = { 'Content-Type': 'application/json' };
   const stored = localStorage.getItem('user');
   if (stored) headers['x-user-id'] = JSON.parse(stored).id;
-  const res = await fetch(`${API}${url}`, { headers, ...opts, body: opts.body });
+  let res;
+  try {
+    res = await fetch(`${API}${url}`, { headers, ...opts, body: opts.body });
+  } catch {
+    throw new Error(NETWORK_ERROR);
+  }
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(err.error || 'Request failed');
+    const err = await res.json().catch(() => ({}));
+    throw new Error(friendly(err.error));
   }
   return res.json();
 };

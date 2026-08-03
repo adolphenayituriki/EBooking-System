@@ -34,8 +34,10 @@ export default function Navbar() {
     { id: 2, icon: FaPercent, title: 'Save 20% this weekend', desc: 'Book 7 days ahead and unlock exclusive rates.', time: '1h ago', read: false },
     { id: 3, icon: FaSpa, title: 'Spa package available', desc: 'New couples massage package is now live.', time: '1d ago', read: true },
   ]);
-  const userMenuRef = useRef(null);
-  const notifRef = useRef(null);
+  const userMenuRefDesktop = useRef(null);
+  const userMenuRefMobile = useRef(null);
+  const notifRefDesktop = useRef(null);
+  const notifRefMobile = useRef(null);
   const { pathname } = useLocation();
 
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -43,7 +45,10 @@ export default function Navbar() {
   useEffect(() => {
     if (!showUserMenu) return;
     const handleClick = (e) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) setShowUserMenu(false);
+      const inside = [userMenuRefDesktop, userMenuRefMobile].some(
+        (r) => r.current && r.current.contains(e.target)
+      );
+      if (!inside) setShowUserMenu(false);
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
@@ -52,7 +57,10 @@ export default function Navbar() {
   useEffect(() => {
     if (!showNotifs) return;
     const handleClick = (e) => {
-      if (notifRef.current && !notifRef.current.contains(e.target)) setShowNotifs(false);
+      const inside = [notifRefDesktop, notifRefMobile].some(
+        (r) => r.current && r.current.contains(e.target)
+      );
+      if (!inside) setShowNotifs(false);
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
@@ -105,8 +113,8 @@ export default function Navbar() {
     </div>
   );
 
-  const notifBtn = (
-    <div className="relative" ref={notifRef}>
+  const notifBtn = (ref) => (
+    <div className="relative" ref={ref}>
       <button
         onClick={() => setShowNotifs(!showNotifs)}
         className={`relative w-9 h-9 flex items-center justify-center rounded-xl transition-all border ${
@@ -168,8 +176,8 @@ export default function Navbar() {
     </div>
   );
 
-  const profileBtn = (compact) => user ? (
-    <div className="relative" ref={userMenuRef}>
+  const profileBtn = (compact, menuRef) => user ? (
+    <div className="relative" ref={menuRef}>
       <button
         onClick={() => setShowUserMenu(!showUserMenu)}
         className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all border ${
@@ -238,8 +246,8 @@ export default function Navbar() {
 
   const actions = (
     <div className="flex items-center justify-end gap-1.5 xl:gap-2 shrink-0">
-      {notifBtn}
-      {profileBtn(false)}
+      {notifBtn(notifRefDesktop)}
+      {profileBtn(false, userMenuRefDesktop)}
       <button
         onClick={handleBookNow}
         className={`text-sm font-semibold py-2.5 px-4 xl:px-5 rounded-xl whitespace-nowrap transition-all ${
@@ -289,8 +297,8 @@ export default function Navbar() {
                 <div className="flex lg:hidden items-center justify-between w-full">
                   <Logo />
                   <div className="flex items-center gap-1.5">
-                    {profileBtn(true)}
-                    {notifBtn}
+                    {profileBtn(true, userMenuRefMobile)}
+                    {notifBtn(notifRefMobile)}
                     <button
                       onClick={() => setOpen(!open)}
                       className="relative z-50 w-10 h-10 flex items-center justify-center rounded-xl text-gray-400"
@@ -315,8 +323,8 @@ export default function Navbar() {
               <div className="flex lg:hidden items-center justify-between w-full">
                 <Logo />
                 <div className="flex items-center gap-1.5">
-                  {profileBtn(true)}
-                  {notifBtn}
+                  {profileBtn(true, userMenuRefMobile)}
+                  {notifBtn(notifRefMobile)}
                   <button
                     onClick={() => setOpen(!open)}
                     className="relative z-50 w-10 h-10 flex items-center justify-center rounded-xl text-gray-500"
