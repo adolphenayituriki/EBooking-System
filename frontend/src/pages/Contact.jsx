@@ -5,6 +5,7 @@ import {
   FaUser, FaCommentDots, FaTag,
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { API_BASE } from '../services/api';
 
 const contactInfo = [
   { icon: FaMapMarkerAlt, label: 'Visit Us', value: 'KN 5 Road, Kigali, Rwanda', sub: 'Open in Google Maps' },
@@ -79,7 +80,7 @@ export default function Contact() {
     }
     setLoading(true);
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(`${API_BASE}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

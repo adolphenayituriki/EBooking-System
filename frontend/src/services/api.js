@@ -1,4 +1,6 @@
-const API = '/api';
+const API = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://ebooking-system-8u63.onrender.com/api' : '/api');
+
+export const API_BASE = API;
 
 const NETWORK_ERROR = 'Unable to connect to the server. Please check your internet connection and try again.';
 
