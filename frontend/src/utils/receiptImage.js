@@ -125,11 +125,12 @@ export async function renderReceiptImage(b) {
 
   ctx.fillStyle = '#ffffff';
   ctx.font = '700 21px ' + FONT;
-  ctx.fillText('Akarabo Hotel & Spa', PAD + 76, 8 + 30);
+  ctx.fillText('Akarabo Hotel & Spa', PAD + 76, 8 + 26);
   ctx.font = '400 11px ' + FONT;
   ctx.fillStyle = '#cbd5e1';
-  ctx.fillText('KN 5 Road, Kigali, Rwanda', PAD + 76, 8 + 58);
-  ctx.fillText('+250 788 123 456  \u00b7  info@akarabohotel.rw', PAD + 76, 8 + 74);
+  ctx.fillText('KN 5 Road, Kigali, Rwanda', PAD + 76, 8 + 50);
+  ctx.fillText('+250 788 123 456', PAD + 76, 8 + 66);
+  ctx.fillText('info@akarabohotel.rw', PAD + 76, 8 + 82);
 
   ctx.fillStyle = '#9ca3af';
   ctx.font = '700 10px ' + FONT;
